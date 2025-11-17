@@ -1,4 +1,4 @@
-package servicio;
+package controlador;
 
 
 import dao.PersonaDAO;
@@ -15,6 +15,8 @@ public class PersonaServicio {
         dao.insertar(nombre, edad, email, nacionalidad);
     }
 
+    
+    
     
 }
 

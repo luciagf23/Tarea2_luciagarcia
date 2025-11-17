@@ -22,8 +22,8 @@ public class ConexionBD {
 
                 // Obtener valores
                 String url = props.getProperty("application.url");
-                String usuario = props.getProperty("application.user", "root"); 
-                String password = props.getProperty("application.password", ""); 
+                String usuario = props.getProperty("application.usuarioAdmin", "root"); 
+                String password = props.getProperty("application.passwordAdmin", ""); 
 
                 // Cargar driver MySQL 
                 Class.forName("com.mysql.cj.jdbc.Driver");

@@ -1,4 +1,4 @@
-package servicio;
+package controlador;
 
 
 import java.sql.Connection;

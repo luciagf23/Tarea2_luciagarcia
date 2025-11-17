@@ -1,4 +1,4 @@
-package servicio;
+package controlador;
 
 public class NumeroServicio {
 
