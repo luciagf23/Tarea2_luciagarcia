@@ -11,19 +11,17 @@ public abstract class Persona{
 	protected String nombre;
 	protected String email;
 	protected String nacionalidad;
-	protected Credenciales credenciales;
 
 	public Persona() {
 		super();
 	}
 
-	public Persona(Long id, String nombre, String email, String nacionalidad, Credenciales credenciales) {
-		super();
+	public Persona(Long id, String nombre, String email, String nacionalidad) {
 		this.id = id;
 		this.nombre = nombre;
 		this.email = email;
 		this.nacionalidad = nacionalidad;
-		this.credenciales = credenciales;
+	
 	}
 
 	public Long getId() {
@@ -60,8 +58,10 @@ public abstract class Persona{
 
 	@Override
 	public String toString() {
-		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", nacionalidad=" + nacionalidad
-				+ ", credenciales=" + credenciales + "]";
+		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", nacionalidad=" + nacionalidad + "]";
 	}
+
+	
+	
 
 }

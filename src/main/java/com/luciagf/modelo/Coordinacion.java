@@ -1,40 +1,38 @@
 package com.luciagf.modelo;
 
-
 import java.time.LocalDate;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Lucía García Fernández 
+ * @author Lucía García Fernández
  * @version 1.0
  * @since 2025
  */
-public class Coordinacion extends Persona{
+public class Coordinacion extends Persona {
 
 	private Long idCoord;
 	private boolean senior = false;
 	private LocalDate fechaSenior = null;
-	private Set<Espectaculo> espectaculos = new HashSet<>();
 
 	public Coordinacion() {
 
 	}
 
-	public Coordinacion(Long idCoord, boolean senior, LocalDate fechaSenior) {
-		super();
-		this.idCoord = idCoord;
+	public Coordinacion(Long idPersona, String nombre, String email, String nacionalidad, boolean senior,
+			LocalDate fechaSenior) {
+		super(idPersona, nombre, email, nacionalidad);
 		this.senior = senior;
 		this.fechaSenior = fechaSenior;
 	}
 
-	public Long getIdCoord() {
+	public Long getId() {
 		return idCoord;
 	}
 
-	public void setIdCoord(Long idCoord) {
-		this.idCoord = idCoord;
+	public void setId(Long id) {
+		this.idCoord = id;
 	}
 
 	public boolean isSenior() {
@@ -53,18 +51,9 @@ public class Coordinacion extends Persona{
 		this.fechaSenior = fechaSenior;
 	}
 
-	public Set<Espectaculo> getEspectaculos() {
-		return espectaculos;
-	}
-
-	public void setEspectaculos(Set<Espectaculo> espectaculos) {
-		this.espectaculos = espectaculos;
-	}
-
 	@Override
 	public String toString() {
-		return "Coordinacion [idCoord=" + idCoord + ", senior=" + senior + ", fechaSenior=" + fechaSenior
-				+ ", espectaculos=" + espectaculos + "]";
-	}
+		return "Coordinacion [id=" + idCoord + ", senior=" + senior + ", fechaSenior=" + fechaSenior;
 
+	}
 }
