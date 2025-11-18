@@ -32,7 +32,7 @@ public class PersonaServicio {
 
 	        // Validar nombre de usuario único
 	        if (credencialDAO.buscarPorUsuario(credencial.getNombre()) != null) {
-	            System.out.println("Error: el nombre de usuario ya existe en el sistema.");
+	            System.out.println("Error: el nombre de usuario ya existe en el sistema");
 	            return false;
 	        }
 
@@ -77,10 +77,26 @@ public class PersonaServicio {
 	    try {
 	        personaDAO.actualizar(persona);
 	        credencialDAO.actualizar(credencial);
-	        System.out.println("Persona y credencial actualizadas correctamente.");
+	        System.out.println("Persona y credencial actualizadas correctamente");
 	        return true;
 	    } catch (SQLException e) {
 	        System.out.println("Error al actualizar: " + e.getMessage());
+	        return false;
+	    }
+	}
+	// Eliminar persona y credencial asociada
+	public boolean eliminarPersona(Long idPersona) {
+	    try {
+	        Persona persona = personaDAO.buscarPorId(idPersona);
+	        if (persona != null) {
+	            credencialDAO.eliminar(persona.getIdCredenciales());
+	            personaDAO.eliminar(idPersona);
+	            System.out.println("Persona y credencial eliminadas correctamente");
+	            return true;
+	        }
+	        return false;
+	    } catch (SQLException e) {
+	        System.out.println("Error al eliminar persona: " + e.getMessage());
 	        return false;
 	    }
 	}
