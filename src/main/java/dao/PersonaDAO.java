@@ -96,10 +96,7 @@ public class PersonaDAO {
                     if ("artista".equalsIgnoreCase(perfil)) {
                         String especStr = rs.getString("especialidad");
                         Especialidad espec = null;
-                        if (especStr != null && !especStr.isBlank()) {
-                            espec = Especialidad.valueOf(especStr.trim().toUpperCase());
-                        }
-
+                       
                         return new Artista(
                             rs.getLong("id"),
                             rs.getString("nombre"),
@@ -148,9 +145,7 @@ public class PersonaDAO {
                 if ("artista".equalsIgnoreCase(perfil)) {
                     String especStr = rs.getString("especialidad");
                     Especialidad espec = null;
-                    if (especStr != null && !especStr.isBlank()) {
-                        espec = Especialidad.valueOf(especStr.trim().toUpperCase());
-                    }
+                    
 
                     personas.add(new Artista(
                         rs.getLong("id"),
