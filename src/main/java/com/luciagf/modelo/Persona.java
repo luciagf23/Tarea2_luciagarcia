@@ -11,6 +11,7 @@ public class Persona{
 	protected String nombre;
 	protected String email;
 	protected String nacionalidad;
+	private Long idCredenciales;
 
 	public Persona() {
 		super();
@@ -56,9 +57,18 @@ public class Persona{
 		this.nacionalidad = nacionalidad;
 	}
 
+	
+	public Long getIdCredenciales() {
+		return idCredenciales;
+	}
+
+	public void setIdCredenciales(Long idCredenciales) {
+		this.idCredenciales = idCredenciales;
+	}
+
 	@Override
 	public String toString() {
-		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", nacionalidad=" + nacionalidad + "]";
+		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", nacionalidad=" + nacionalidad + ", credenciales=" +idCredenciales+ "]";
 	}
 
 	

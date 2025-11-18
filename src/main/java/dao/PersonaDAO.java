@@ -182,4 +182,28 @@ public class PersonaDAO {
         }
         return personas;
     }
+    
+ // ACTUALIZAR persona
+    public void actualizar(Persona persona) throws SQLException {
+        String sql = "UPDATE persona SET nombre = ?, email = ?, nacionalidad = ?, idCredenciales = ? WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, persona.getNombre());
+            ps.setString(2, persona.getEmail());
+            ps.setString(3, persona.getNacionalidad());
+            ps.setLong(4, persona.getIdCredenciales()); 
+            ps.setLong(5, persona.getId());
+            ps.executeUpdate();
+        }
+    }
+    
+    // ELIMINAR persona por ID
+    public void eliminar(Long id) throws SQLException {
+        String sql = "DELETE FROM persona WHERE id = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        }
+    }
+    
+    
 }

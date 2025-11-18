@@ -104,5 +104,26 @@ public class CredencialDAO {
 	        }
 	        return credenciales;
 	    }
+	    
 	
+	 // ACTUALIZAR credencial
+	    public void actualizar(Credencial credencial) throws SQLException {
+	        String sql = "UPDATE credencial SET usuario = ?, password = ?, perfil = ? WHERE id = ?";
+	        try (PreparedStatement ps = con.prepareStatement(sql)) {
+	            ps.setString(1, credencial.getNombre()); 
+	            ps.setString(2, credencial.getPassword());
+	            ps.setString(3, credencial.getPerfil().name());
+	            ps.setLong(4, credencial.getId());
+	            ps.executeUpdate();
+	        }
+	    }
+	    
+	 // ELIMINAR credencial por ID
+	    public void eliminar(Long id) throws SQLException {
+	        String sql = "DELETE FROM credencial WHERE id = ?";
+	        try (PreparedStatement ps = con.prepareStatement(sql)) {
+	            ps.setLong(1, id);
+	            ps.executeUpdate();
+	        }
+	    }
 }

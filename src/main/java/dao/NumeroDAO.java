@@ -23,7 +23,7 @@ public class NumeroDAO {
 	
 	//INSERTAR numero
 	public void insertar(Numero numero) {
-		String sql = "INSERT INTO numero(id, orden, nombre, duracion VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO numero(id, orden, nombre, duracion, idEspectaculo) VALUES (?, ?, ?, ?, ?, ?)";
 		try(PreparedStatement ps = con.prepareStatement(sql)) {
 				ps.setLong(1, numero.getId());
 				ps.setInt(2, numero.getOrden());
@@ -93,6 +93,5 @@ public class NumeroDAO {
 	    return numeros;
 	}
 
-	
-	
-}
+
+	}
