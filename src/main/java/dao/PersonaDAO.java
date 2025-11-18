@@ -1,6 +1,8 @@
+
 package dao;
 
 import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,13 @@ import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Coordinacion;
 import com.luciagf.modelo.Especialidad;
 import com.luciagf.modelo.Persona;
+
+/**
+* Clase PersonaDAO.java
+*
+* author LUCÍA GARCÍA FERNÁNDEZ
+* version 1.0
+*/
 
 public class PersonaDAO {
 

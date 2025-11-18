@@ -12,6 +12,13 @@ import java.util.List;
 import com.luciagf.modelo.Coordinacion;
 import com.luciagf.modelo.Espectaculo;
 
+/**
+* Clase EspectaculoDAO.java
+*
+* author LUCÍA GARCÍA FERNÁNDEZ
+* version 1.0
+*/
+
 public class EspectaculoDAO {
 	
 	private Connection con;

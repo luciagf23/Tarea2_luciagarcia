@@ -12,6 +12,13 @@ import com.luciagf.modelo.Coordinacion;
 import com.luciagf.modelo.Espectaculo;
 import com.luciagf.modelo.Numero;
 
+/**
+* Clase NumeroDAO.java
+*
+* author LUCÍA GARCÍA FERNÁNDEZ
+* version 1.0
+*/
+
 public class NumeroDAO {
 
 	private Connection con;

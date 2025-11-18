@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-11-2025 a las 17:34:46
+-- Tiempo de generación: 18-11-2025 a las 17:02:56
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -69,7 +69,7 @@ CREATE TABLE `credenciales` (
   `id` bigint(11) NOT NULL,
   `nombre` varchar(30) NOT NULL,
   `contrasenia` varchar(100) NOT NULL,
-  `perfil` enum('ACROBACIA','HUMOR','MAGIA','EQUILIBRISMO','MALABARISMO') NOT NULL
+  `perfil` enum('ADMIN','COORDINACION','ARTISTA') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

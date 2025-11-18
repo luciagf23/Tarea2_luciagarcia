@@ -11,6 +11,13 @@ import java.util.List;
 import com.luciagf.modelo.Credencial;
 import com.luciagf.modelo.Perfil;
 
+/**
+* Clase CredencialDAO.java
+*
+* author LUCÍA GARCÍA FERNÁNDEZ
+* version 1.0
+*/
+
 public class CredencialDAO {
 	
 	 private Connection con;

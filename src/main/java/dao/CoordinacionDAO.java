@@ -11,6 +11,13 @@ import java.util.List;
 
 import com.luciagf.modelo.Coordinacion;
 
+/**
+* Clase CoordinacionDAO.java
+*
+* author LUCÍA GARCÍA FERNÁNDEZ
+* version 1.0
+*/
+
 public class CoordinacionDAO {
 
 	private Connection con;

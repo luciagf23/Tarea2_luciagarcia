@@ -11,6 +11,13 @@ import java.util.List;
 import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Especialidad;
 
+/**
+* Clase ArtistaDAO.java
+*
+* author LUCÍA GARCÍA FERNÁNDEZ
+* version 1.0
+*/
+
 public class ArtistaDAO {
 
 	private Connection con;
@@ -32,7 +39,7 @@ public class ArtistaDAO {
             ps.executeUpdate();
         }
 
-        // Luego insertamos el artista
+        
         String sqlArtista = "INSERT INTO artista (idPersona, idArt, apodo, especialidad) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sqlArtista)) {
             ps.setLong(1, artista.getId());

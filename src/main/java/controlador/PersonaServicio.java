@@ -21,7 +21,6 @@ public class PersonaServicio {
     }
 	
 	
-	
 	public boolean registrarPersona(Persona persona, Credencial credencial) {
 	    try {
 	        // Validar email único
@@ -36,7 +35,7 @@ public class PersonaServicio {
 	            return false;
 	        }
 
-	        // Insertar credencial primero
+	        // Insertar credencial 
 	        credencialDAO.insertar(credencial);
 
 	        // Vincular credencial a persona
@@ -54,6 +53,7 @@ public class PersonaServicio {
 	    }
 	}
 
+	//Buscar persona por id
 	public Persona buscarPersonaPorId(Long id) {
 	    try {
 	        return personaDAO.buscarPorId(id);
@@ -64,6 +64,7 @@ public class PersonaServicio {
 	}
 
 	
+	//Listar personas
 	public List<Persona> listarPersonas() {
 	    try {
 	        return personaDAO.listarTodas();
@@ -73,6 +74,9 @@ public class PersonaServicio {
 	    }
 	}
 	
+	
+	
+	//Actualizar persona
 	public boolean actualizarPersona(Persona persona, Credencial credencial) {
 	    try {
 	        personaDAO.actualizar(persona);
@@ -84,6 +88,8 @@ public class PersonaServicio {
 	        return false;
 	    }
 	}
+	
+	
 	// Eliminar persona y credencial asociada
 	public boolean eliminarPersona(Long idPersona) {
 	    try {
