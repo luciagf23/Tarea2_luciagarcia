@@ -17,20 +17,12 @@ public class Espectaculo implements Serializable {
 	private LocalDate fechaIni;
 	private LocalDate fechaFin;
 	private Coordinacion coordinacion;
-	private Set<Numero> numeros = new HashSet<>();
 
 	public Espectaculo() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Espectaculo(Long id, String nombre, LocalDate fechaini, LocalDate fechafin) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-		this.fechaIni = fechaini;
-		this.fechaFin = fechafin;
-	}
 
 	public Espectaculo(Long id, String nombre, LocalDate fechaini, LocalDate fechafin, Coordinacion coordinacion) {
 		super();
@@ -81,18 +73,11 @@ public class Espectaculo implements Serializable {
 		this.coordinacion = coordinacion;
 	}
 
-	public Set<Numero> getNumeros() {
-		return numeros;
-	}
-
-	public void setNumeros(Set<Numero> numeros) {
-		this.numeros = numeros;
-	}
-
+	
 	@Override
 	public String toString() {
 		return "Espectaculo [id=" + id + ", nombre=" + nombre + ", fechaini=" + fechaIni + ", fechafin=" + fechaFin
-				+ ", coordinacion=" + coordinacion + ", numeros=" + numeros.size() + "]";
+				+ ", coordinacion=" + coordinacion +"]";
 	}
 
 }

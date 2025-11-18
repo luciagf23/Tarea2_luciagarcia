@@ -14,7 +14,6 @@ public class Numero {
 	private int orden;
 	private String nombre;
 	private double duracion;
-	private Set<Artista> artistas = new HashSet<Artista>();
 	private Espectaculo espectaculo;
 
 	public Numero() {
@@ -22,13 +21,13 @@ public class Numero {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Numero(Long id, int orden, String nombre, double duracion) {
-		super();
-		this.id = id;
-		this.orden = orden;
-		this.nombre = nombre;
-		this.duracion = duracion;
-	}
+	public Numero(Long id, int orden, String nombre, double duracion, Espectaculo espectaculo) {
+        this.id = id;
+        this.orden = orden;
+        this.nombre = nombre;
+        this.duracion = duracion;
+        this.espectaculo = espectaculo;
+    }
 
 	public Long getId() {
 		return id;
@@ -54,14 +53,6 @@ public class Numero {
 		this.nombre = nombre;
 	}
 
-	public Set<Artista> getArtistas() {
-		return artistas;
-	}
-
-	public void setArtistas(Set<Artista> artistas) {
-		this.artistas = artistas;
-	}
-
 	public double getDuracion() {
 		return duracion;
 	}
@@ -80,8 +71,7 @@ public class Numero {
 
 	@Override
 	public String toString() {
-		return "Numero [id=" + id + ", orden=" + orden + ", nombre=" + nombre + ", duracion=" + duracion + ", artistas="
-				+ artistas + ", espectaculo=" + espectaculo + "]";
+		return "Numero [id=" + id + ", orden=" + orden + ", nombre=" + nombre + ", duracion=" + duracion + ", espectaculo=" + espectaculo + "]";
 	}
 
 }

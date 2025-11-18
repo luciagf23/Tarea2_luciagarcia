@@ -5,7 +5,7 @@ package com.luciagf.modelo;
  * @version 1.0
  * @since 2025
  */
-public abstract class Persona{
+public class Persona{
 
 	protected Long id;
 	protected String nombre;

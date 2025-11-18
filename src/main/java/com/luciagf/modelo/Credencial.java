@@ -5,14 +5,14 @@ package com.luciagf.modelo;
  * @version 1.0
  * @since 2025
  */
-public class Credenciales {
+public class Credencial {
 
 	private Long id;
 	private String nombreUsuario;
 	private String password;
 	private Perfil perfil;
 
-	public Credenciales(Long id, String nombre, String password, Perfil perfil) {
+	public Credencial(Long id, String nombre, String password, Perfil perfil) {
 		super();
 		this.id = id;
 		this.nombreUsuario = nombre;
@@ -24,7 +24,7 @@ public class Credenciales {
 		return id;
 	}
 
-	public Credenciales() {
+	public Credencial() {
 		super();
 
 	}
