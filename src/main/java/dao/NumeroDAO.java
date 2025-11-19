@@ -36,7 +36,7 @@ public class NumeroDAO {
 				ps.setInt(2, numero.getOrden());
 	            ps.setString(3, numero.getNombre());
 	            ps.setDouble(4, numero.getDuracion());
-	            ps.setLong(5, numero.getEspectaculo().getId()); 
+	            ps.setLong(5, numero.getIdEspectaculo()); 
 	            ps.executeUpdate();
 	           
 	           System.out.println("Numero insertado correctamente");
@@ -48,6 +48,49 @@ public class NumeroDAO {
 	}
 	
 	// BUSCAR POR ID
+	 public Numero buscarPorId(long id) throws SQLException {
+
+	        String sql = "SELECT * FROM numero WHERE id = ?";
+
+	        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+	            ps.setLong(1, id);
+	            ResultSet rs = ps.executeQuery();
+
+	            if (rs.next()) {
+	                return new Numero(
+	                    rs.getLong("id"),
+	                    rs.getInt("orden"),
+	                    rs.getString("nombre"),
+	                    rs.getDouble("duracion"),
+	                    rs.getLong("idEspectaculo")
+	                    
+	                );
+	            }
+	        }
+	        return null;
+	    }
+	
+	
+	 public void actualizar(Numero numero) throws SQLException {
+
+	        String sql = "UPDATE numero SET nombre = ?, orden = ?, duracion = ?, idEspectaculo = ? " +
+	                     "WHERE id = ?";
+
+	        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+	            ps.setString(1, numero.getNombre());
+	            ps.setInt(2, numero.getOrden());
+	            ps.setDouble(3, numero.getDuracion());
+	            ps.setLong(4, numero.getIdEspectaculo());
+	            ps.setLong(5, numero.getId());
+
+	            ps.executeUpdate();
+	        }
+	    }
+	
+	
+	//LISTAR TODOS LOS NUMEROS
 	public List<Numero> listarTodos() throws SQLException {
 	    List<Numero> numeros = new ArrayList<>();
 	    String sql = "SELECT n.id, n.orden, n.nombre, n.duracion, " +
@@ -84,11 +127,11 @@ public class NumeroDAO {
 
 	           
 	            Numero num = new Numero(
-	                rs.getLong("id"),
-	                rs.getInt("orden"),
-	                rs.getString("nombre"),
-	                rs.getDouble("duracion"),
-	                esp
+	            		rs.getLong("id"),
+	                    rs.getInt("orden"),
+	                    rs.getString("nombre"),
+	                    rs.getDouble("duracion"),
+	                    rs.getLong("idEspectaculo")
 	            );
 
 	            numeros.add(num);
@@ -99,6 +142,47 @@ public class NumeroDAO {
 	    }
 	    return numeros;
 	}
+	
+	
+	//LISTAR NUMEROS POR ESPECTACULO
+	public List<Numero> listarPorEspectaculo(long idEspectaculo) throws SQLException {
+
+        List<Numero> lista = new ArrayList<>();
+
+        String sql = "SELECT * FROM numero WHERE idEspectaculo = ? ORDER BY orden";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setLong(1, idEspectaculo);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Numero n = new Numero(
+                		rs.getLong("id"),
+	                    rs.getInt("orden"),
+	                    rs.getString("nombre"),
+	                    rs.getDouble("duracion"),
+	                    rs.getLong("idEspectaculo")
+                );
+                lista.add(n);
+            }
+        }
+
+        return lista;
+    }
+
+	
+	//ELIMINAR NUMERO
+	 public boolean eliminar(long id) throws SQLException {
+
+	        String sql = "DELETE FROM numero WHERE id = ?";
+
+	        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+	            ps.setLong(1, id);
+	            return ps.executeUpdate() > 0;
+	        }
+	    }
 
 
 	}

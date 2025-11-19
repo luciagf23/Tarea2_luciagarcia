@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,25 +28,24 @@ public class CoordinacionDAO {
     }
 
     // INSERTAR COORDINACION
-    public void insertar(Coordinacion coordinacion) throws SQLException {
+    public void insertar(Long idPersona, boolean senior, LocalDate fechaSenior) throws SQLException {
         // Primero insertamos la persona
         String sqlPersona = "INSERT INTO persona (id, nombre, email, nacionalidad, perfil) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sqlPersona)) {
-            ps.setLong(1, coordinacion.getId());
-            ps.setString(2, coordinacion.getNombre());
-            ps.setString(3, coordinacion.getEmail());
-            ps.setString(4, coordinacion.getNacionalidad());
-            ps.setString(5, "coordinacion");
+            ps.setLong(1, idPersona);
+            ps.setBoolean(2, senior);
+            ps.setDate(3, Date.valueOf(fechaSenior));
+            
             ps.executeUpdate();
         }
 
         // Luego insertamos la coordinación
         String sqlCoord = "INSERT INTO coordinacion (idPersona, senior, fechasenior) VALUES (?, ?, ?)";
         try (PreparedStatement ps = con.prepareStatement(sqlCoord)) {
-            ps.setLong(1, coordinacion.getId());
-            ps.setBoolean(2, coordinacion.isSenior());
-            if (coordinacion.getFechaSenior() != null) {
-                ps.setDate(3, Date.valueOf(coordinacion.getFechaSenior()));
+            ps.setLong(1, idPersona);
+            ps.setBoolean(2,senior);
+            if (fechaSenior != null) {
+                ps.setDate(3, Date.valueOf(fechaSenior));
             } else {
                 ps.setDate(3, null);
             }
@@ -102,6 +102,21 @@ public class CoordinacionDAO {
         }
         return null;
     }
+    
+    // ACTUALIZAR Coordinacion
+    public void actualizar(long id, Boolean senior, LocalDate fechaSenior) throws SQLException {
+
+        String sql = "UPDATE artista SET apodo = ?, especialidades = ? WHERE idPersona = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setLong(1, id);
+            ps.setBoolean(2, senior);
+            //ps.setLocalDate(3, fechaSenior);
+
+            ps.executeUpdate();
+        }
+    }
 
     // LISTAR TODAS LAS COORDINACIONES
     public List<Coordinacion> listarTodas() throws SQLException {
@@ -125,5 +140,6 @@ public class CoordinacionDAO {
         }
         return coordinaciones;
     }
+
 }
 

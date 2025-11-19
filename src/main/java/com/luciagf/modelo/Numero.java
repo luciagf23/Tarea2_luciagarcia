@@ -1,7 +1,5 @@
 package com.luciagf.modelo;
 
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Lucía García Fernández
@@ -14,20 +12,25 @@ public class Numero {
 	private int orden;
 	private String nombre;
 	private double duracion;
-	private Espectaculo espectaculo;
+	private Long idEspectaculo;
 
 	public Numero() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public Numero(Long id, int orden, String nombre, double duracion, Espectaculo espectaculo) {
-        this.id = id;
-        this.orden = orden;
-        this.nombre = nombre;
-        this.duracion = duracion;
-        this.espectaculo = espectaculo;
-    }
+	
+
+	public Numero(Long id, int orden, String nombre, double duracion, Long idEspectaculo) {
+		super();
+		this.id = id;
+		this.orden = orden;
+		this.nombre = nombre;
+		this.duracion = duracion;
+		this.idEspectaculo = idEspectaculo;
+	}
+
+
 
 	public Long getId() {
 		return id;
@@ -61,17 +64,27 @@ public class Numero {
 		this.duracion = duracion;
 	}
 
-	public Espectaculo getEspectaculo() {
-		return espectaculo;
+	
+	public Long getIdEspectaculo() {
+		return idEspectaculo;
 	}
 
-	public void setEspectaculo(Espectaculo espectaculo) {
-		this.espectaculo = espectaculo;
+
+
+	public void setIdEspectaculo(Long idEspectaculo) {
+		this.idEspectaculo = idEspectaculo;
 	}
+
+
 
 	@Override
 	public String toString() {
-		return "Numero [id=" + id + ", orden=" + orden + ", nombre=" + nombre + ", duracion=" + duracion + ", espectaculo=" + espectaculo + "]";
+		return "Numero [id=" + id + ", orden=" + orden + ", nombre=" + nombre + ", duracion=" + duracion
+				+ ", idEspectaculo=" + idEspectaculo + "]";
 	}
+
+
+
+	
 
 }
