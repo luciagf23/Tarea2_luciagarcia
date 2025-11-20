@@ -23,6 +23,13 @@ public class Artista extends Persona {
 		this.apodo = apodo;
 		this.especialidad = especialidad;
 	}
+	
+	public Artista(Long idPersona, String nombre, String email, String nacionalidad, String apodo,
+			Especialidad especialidad) {
+		super(idPersona, nombre, email, nacionalidad);
+		this.apodo = apodo;
+		this.especialidad = especialidad;
+	}
 
 	public Long getId() {
 		return idArt;

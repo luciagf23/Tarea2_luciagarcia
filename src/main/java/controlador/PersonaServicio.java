@@ -20,13 +20,12 @@ public class PersonaServicio {
 	private Credencial usuarioActual;
 	private Sesion sesion;
 
-	public PersonaServicio(Connection con) {
+	public PersonaServicio(Connection con, Sesion sesion) {
         this.personaDAO = new PersonaDAO(con);
         this.credencialDAO=new CredencialDAO(con);
         this.usuarioActual=null;
         this.sesion=sesion;
     }
-	
 	
 	//LOGIN
 	public boolean login(String nombreUsuario, String password) throws SQLException {

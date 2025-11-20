@@ -86,6 +86,11 @@ public class Numero {
     public void setArtistas(List<Artista> artistas) { 
     	this.artistas = artistas;
     }
+    
+    //Metodos
+    public void addArtista(Artista artista) {
+    	artistas.add(artista);
+    }
 
 	@Override
 	public String toString() {

@@ -24,6 +24,12 @@ public class Espectaculo implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
+	public Espectaculo(Long id, String nombre, LocalDate fechaInicio, LocalDate fechaFin) {
+	    this.id = id;
+	    this.nombre = nombre;
+	    this.fechaIni = fechaInicio;
+	    this.fechaFin = fechaFin;
+	}
 
 	public Espectaculo(Long id, String nombre, LocalDate fechaIni, LocalDate fechaFin, Coordinacion coordinacion) {
 		super();
@@ -88,6 +94,11 @@ public class Espectaculo implements Serializable {
 	}
     public void setNumeros(List<Numero> numeros) { 
     	this.numeros = numeros; 
+    }
+    
+    //Metodos
+    public void addNumero(Numero numero) {
+    	numeros.add(numero);
     }
 
 

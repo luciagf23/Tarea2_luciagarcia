@@ -7,14 +7,96 @@
 
 package vista;
 
+import java.sql.Connection;
+import java.util.Scanner;
+
 import com.luciagf.modelo.Perfil;
 import com.luciagf.modelo.Sesion;
 
+import controlador.EspectaculoServicio;
+import controlador.PersonaServicio;
+import dao.ConexionBD;
+
 public class Main {
+	
+private static Scanner teclado=new Scanner(System.in);
+private static Sesion sesion = new Sesion(); 
+
+public static void main(String[] args) {
+	try {
+	Connection con = ConexionBD.getConexion();
 
 	
-	private static Sesion sesion = new Sesion(); 
+	PersonaServicio personaServicio = new PersonaServicio(con, sesion);
+    EspectaculoServicio espectaculoServicio = new EspectaculoServicio(con);
 
+    boolean salir = false;
+    while (!salir) {
+        mostrarMenu();
+        System.out.print("Elige opción: ");
+        int opcion = teclado.nextInt();
+        teclado.nextLine(); // limpiar buffer
+
+        switch (sesion.getPerfilActual()) {
+            case INVITADO:
+                switch (opcion) {
+                    case 1:
+                        espectaculoServicio.verEspectaculosBasico();
+                        break;
+                    case 2:
+                        System.out.print("Usuario: ");
+                        String usuario = teclado.nextLine();
+                        System.out.print("Contraseña: ");
+                        String pass = teclado.nextLine();
+                        personaServicio.login(usuario, pass);
+                        break;
+                    case 0:
+                        salir = true;
+                        break;
+                }
+                break;
+
+            case ADMIN:
+                switch (opcion) {
+                    case 4: // Ver todos los datos del circo (CU4)
+                        System.out.print("ID del espectáculo: ");
+                        Long idEsp = teclado.nextLong();
+                        espectaculoServicio.verEspectaculoCompleto(idEsp);
+                        break;
+                    case 0:
+                        personaServicio.logout();
+                        break;
+                }
+                break;
+
+            case COORDINACION:
+                switch (opcion) {
+                    case 4: // Ver información completa de espectáculos (CU4)
+                        System.out.print("ID del espectáculo: ");
+                        Long idEsp = teclado.nextLong();
+                        espectaculoServicio.verEspectaculoCompleto(idEsp);
+                        break;
+                    case 0:
+                        personaServicio.logout();
+                        break;
+                }
+                break;
+
+            case ARTISTA:
+                switch (opcion) {
+                    case 0:
+                        personaServicio.logout();
+                        break;
+                }
+                break;
+        }
+    }
+} catch (Exception e) {
+    System.out.println("Error en la aplicación: " + e.getMessage());
+	}
+}
+
+	
     public static void mostrarMenu() {
         Perfil perfilActual = sesion.getPerfilActual(); 
 
@@ -54,3 +136,4 @@ public class Main {
         }
     }
 }
+

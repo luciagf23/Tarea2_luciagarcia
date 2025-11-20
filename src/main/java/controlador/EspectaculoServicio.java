@@ -18,16 +18,24 @@ public class EspectaculoServicio {
 		this.espectaculoDAO = new EspectaculoDAO(con);
 	}
 
-	// VER ESPECTACULO
+	// VER ESPECTACULO BASICO
 	public void verEspectaculosBasico() {
-		List<Espectaculo> lista = espectaculoDAO.listarTodos();
+		try {
+		List<Espectaculo> lista = espectaculoDAO.listarBasicos();
+		if(lista.isEmpty()) {
+			System.out.println("No hay espectaculos registrados");
+		}
 		System.out.println("\n=== LISTA DE ESPECTÁCULOS ===");
 		for (Espectaculo e : lista) {
 			System.out.println("ID: " + e.getId() + " | Nombre: " + e.getNombre() + " | Inicio: " + e.getFechaini()
 					+ " | Fin: " + e.getFechafin());
 		}
+	}	catch(Exception e) {
+			System.out.println("Error al listar espectaculos");
 	}
-
+}
+		
+		
 	
 	// VER ESPECTACULOS COMPLETOS
 	public void verEspectaculoCompleto(Long idEspectaculo) {
@@ -37,7 +45,7 @@ public class EspectaculoServicio {
                 System.out.println("No se encontró el espectáculo con ID " + idEspectaculo);
                 return;
             }
-
+            if(esp.getCoordinacion()!=null) {
             System.out.println("\n=== ESPECTÁCULO COMPLETO ===");
             System.out.println("ID: " + esp.getId() + " | Nombre: " + esp.getNombre());
             System.out.println("Fechas: " + esp.getFechaini() + " - " + esp.getFechafin());
@@ -50,7 +58,9 @@ public class EspectaculoServicio {
             if (esp.getCoordinacion().getFechaSenior() != null) {
                 System.out.println("Fecha Senior: " + esp.getCoordinacion().getFechaSenior());
             }
+          }
 
+            if(esp.getNumeros()!= null && !esp.getNumeros().isEmpty()) {
             System.out.println("\n--- Números ---");
             for (Numero n : esp.getNumeros()) {
                 System.out.println("Orden " + n.getOrden() + ": " + n.getNombre() +
@@ -65,6 +75,9 @@ public class EspectaculoServicio {
                         System.out.println("Especialidad: " + a.getEspecialidad());
                     }
                 }
+            }
+            }else {
+            	System.out.println("Este espectaculo no tiene numeros");
             }
         } catch (SQLException e) {
             System.out.println("Error al ver espectáculo completo: " + e.getMessage());

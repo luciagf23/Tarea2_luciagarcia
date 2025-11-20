@@ -20,7 +20,6 @@ public class ConexionBD {
                 }
                 props.load(input);
 
-                // Obtener valores
                 String url = props.getProperty("application.url");
                 String usuario = props.getProperty("application.usuarioAdmin", "root"); 
                 String password = props.getProperty("application.passwordAdmin", ""); 
