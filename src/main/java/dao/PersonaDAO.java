@@ -30,14 +30,20 @@ public class PersonaDAO {
 
     // INSERTAR PERSONA
     public void insertar(Persona persona) throws SQLException {
-        String sql = "INSERT INTO persona (id, nombre, email, nacionalidad) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setLong(1, persona.getId());
+        String sql = "INSERT INTO persona (nombre, email, nacionalidad) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(2, persona.getNombre());
             ps.setString(3, persona.getEmail());
             ps.setString(4, persona.getNacionalidad());
            
             ps.executeUpdate();
+            
+            //Recuperar el id
+            try(ResultSet rSet=ps.getGeneratedKeys()){
+            	if(rSet.next()) {
+            		persona.setId(rSet.getLong(1));
+            	}
+            }
         }
     }
     
@@ -82,6 +88,24 @@ public class PersonaDAO {
         }
         return null; 
     }
+    
+    public Coordinacion seleccionarCoordinador() throws SQLException {
+        // consulta que devuelve solo personas con perfil COORDINACION
+        String sql = "SELECT id, nombre, email, nacionalidad FROM persona WHERE perfil = 'COORDINACION'";
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                Coordinacion c = new Coordinacion();
+                c.setId(rs.getLong("id"));
+                c.setNombre(rs.getString("nombre"));
+                c.setEmail(rs.getString("email"));
+                c.setNacionalidad(rs.getString("nacionalidad"));
+                return c;
+            }
+        }
+        return null;
+    }
+
 
     // BUSCAR POR ID
     public Persona buscarPorId(Long id) throws SQLException {

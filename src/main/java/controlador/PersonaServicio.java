@@ -82,7 +82,7 @@ public class PersonaServicio {
     }
 
 	
-	
+	//REGISTRAR PERSONA
 	public boolean registrarPersona(Persona persona, Credencial credencial) {
 	    try {
 	        // Validar email único

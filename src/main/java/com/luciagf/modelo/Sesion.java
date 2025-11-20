@@ -13,6 +13,7 @@ public class Sesion {
 	private String nombreUsuario;
 	private String password;
 	private Perfil perfilActual;
+	private Persona personaActual;
 
 	public Sesion(Long id, Perfil perfilActual) {
 		super();
@@ -58,6 +59,14 @@ public class Sesion {
 	public void setPerfilActual(Perfil perfilActual) {
 		this.perfilActual = perfilActual;
 	}
+	
+	 public Persona getPersonaActual() {
+	        return personaActual;
+	    }
+
+	    public void setPersonaActual(Persona personaActual) {
+	        this.personaActual = personaActual;
+	    }
 	
 	// Métodos de login/logout
     public void login(Long id, String nombreUsuario, String password, Perfil perfil) {

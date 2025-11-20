@@ -51,6 +51,26 @@ public class EspectaculoDAO {
 
 	}
 
+	//BUSCAR POR NOMBRE
+	public Espectaculo buscarPorNombre(String nombre) throws SQLException {
+	    String sql = "SELECT id, nombre, fechaInicio, fechaFin, idCoordinacion FROM espectaculo WHERE nombre = ?";
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setString(1, nombre);
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                Espectaculo e = new Espectaculo();
+	                e.setId(rs.getLong("id"));
+	                e.setNombre(rs.getString("nombre"));
+	                e.setFechaini(rs.getDate("fechaInicio").toLocalDate());
+	                e.setFechafin(rs.getDate("fechaFin").toLocalDate());
+	                
+	                return e;
+	            }
+	        }
+	    }
+	    return null; 
+	    }
+	
 
 	// BUSCAR ESPECTÁCULO POR ID
 	public Espectaculo buscarEspectaculoCompleto(Long id) throws SQLException {
@@ -201,4 +221,48 @@ public class EspectaculoDAO {
 		}
 		return espectaculos;
 	}
+	
+	
+	//INSERTAR
+		public void insertar(Espectaculo espectaculo) throws SQLException {
+			String sql = "INSERT INTO espectaculo (nombre, fechaInicio, fechaFin, idCoordinacion) VALUES (?, ?, ?, ?)";
+	        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+	            ps.setString(1, espectaculo.getNombre());
+	            ps.setDate(2, Date.valueOf(espectaculo.getFechaini()));
+	            ps.setDate(3, Date.valueOf(espectaculo.getFechafin()));
+	            ps.setLong(4, espectaculo.getCoordinacion().getId());
+
+	            ps.executeUpdate();
+
+	            try (ResultSet rs = ps.getGeneratedKeys()) {
+	                if (rs.next()) {
+	                    espectaculo.setId(rs.getLong(1));
+	                }
+	            }
+	        }
+	      
+		}
+		
+		// Actualizar espectáculo
+	        public void actualizar(Espectaculo espectaculo) throws SQLException {
+	            String sql = "UPDATE espectaculo SET nombre=?, fechaInicio=?, fechaFin=?, idCoordinacion=? WHERE id=?";
+	            try (PreparedStatement ps = con.prepareStatement(sql)) {
+	                ps.setString(1, espectaculo.getNombre());
+	                ps.setDate(2, Date.valueOf(espectaculo.getFechaini()));
+	                ps.setDate(3, Date.valueOf(espectaculo.getFechafin()));
+	                ps.setLong(4, espectaculo.getCoordinacion().getId());
+	                ps.setLong(5, espectaculo.getId());
+
+	                ps.executeUpdate();
+	            }
+	        }
+		
+	     // Eliminar espectáculo
+	        public void eliminar(Long id) throws SQLException {
+	            String sql = "DELETE FROM espectaculo WHERE id=?";
+	            try (PreparedStatement ps = con.prepareStatement(sql)) {
+	                ps.setLong(1, id);
+	                ps.executeUpdate();
+	            }
+	        }
 }

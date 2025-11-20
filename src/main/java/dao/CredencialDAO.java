@@ -28,12 +28,17 @@ public class CredencialDAO {
 
 	    // INSERTAR CREDENCIAL
 	    public void insertar(Credencial credencial) throws SQLException {
-	        String sql = "INSERT INTO credencial (idPersona, usuario, password) VALUES (?, ?, ?)";
-	        try (PreparedStatement ps = con.prepareStatement(sql)) {
-	            ps.setLong(1, credencial.getId());
+	        String sql = "INSERT INTO credencial (usuario, password) VALUES (?, ?, ?)";
+	        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {      
 	            ps.setString(2, credencial.getNombre());
 	            ps.setString(3, credencial.getPassword());
 	            ps.executeUpdate();
+	            
+	            try(ResultSet rs=ps.getGeneratedKeys()) {
+	            	if(rs.next()) {
+	            		credencial.setId(rs.getLong(1));
+	            	}
+	            }
 	        }
 	    }
 
