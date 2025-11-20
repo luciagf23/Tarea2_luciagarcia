@@ -1,5 +1,7 @@
 package com.luciagf.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Lucía García Fernández
@@ -13,6 +15,7 @@ public class Numero {
 	private String nombre;
 	private double duracion;
 	private Long idEspectaculo;
+	private List<Artista> artistas;
 
 	public Numero() {
 		super();
@@ -28,6 +31,7 @@ public class Numero {
 		this.nombre = nombre;
 		this.duracion = duracion;
 		this.idEspectaculo = idEspectaculo;
+		this.artistas = new ArrayList<>();
 	}
 
 
@@ -75,7 +79,13 @@ public class Numero {
 		this.idEspectaculo = idEspectaculo;
 	}
 
-
+	public List<Artista> getArtistas() { 
+		return artistas; 
+		}
+	
+    public void setArtistas(List<Artista> artistas) { 
+    	this.artistas = artistas;
+    }
 
 	@Override
 	public String toString() {

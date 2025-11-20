@@ -7,6 +7,12 @@ import java.util.List;
 import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Especialidad;
 
+/**
+* Clase ArtistaDAO.java
+*
+* author LUCÍA GARCÍA FERNÁNDEZ
+* version 1.0
+*/
 public class ArtistaDAO {
 
     private Connection con;
@@ -86,6 +92,38 @@ public class ArtistaDAO {
             }
         }
         return null;
+    }
+
+    //BUSCAR ARTISTA POR NUMERO
+    public List<Artista> buscarArtistasPorNumero(Long idNumero) throws SQLException {
+        List<Artista> artistas = new ArrayList<>();
+        String sql = "SELECT a.idArt, p.nombre, p.nacionalidad, a.apodo, ea.especialidad " +
+                     "FROM participa pa " +
+                     "JOIN artista a ON pa.idArt = a.idArt " +
+                     "JOIN persona p ON a.idArt = p.id " +
+                     "JOIN especialidad_artista ea ON a.idArt = ea.idArt " +
+                     "WHERE pa.idNumero = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, idNumero);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Artista art = new Artista(
+                        rs.getLong("id"),
+                        rs.getString("nombre"),
+                        rs.getString("email"),
+                        rs.getString("nacionalidad"),
+                        rs.getLong("idArt"),
+                        rs.getString("apodo"),
+                        Especialidad.valueOf(rs.getString("especialidades"))
+                        
+                    );
+                    
+                    artistas.add(art);
+                }
+            }
+        }
+        return artistas;
     }
 
     

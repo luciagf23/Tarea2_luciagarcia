@@ -34,6 +34,15 @@ public class Coordinacion extends Persona {
 	public void setId(Long id) {
 		this.idCoord = id;
 	}
+	
+
+	public Long getIdCoord() {
+		return idCoord;
+	}
+
+	public void setIdCoord(Long idCoord) {
+		this.idCoord = idCoord;
+	}
 
 	public boolean isSenior() {
 		return senior;
@@ -50,6 +59,7 @@ public class Coordinacion extends Persona {
 	public void setFechaSenior(LocalDate fechaSenior) {
 		this.fechaSenior = fechaSenior;
 	}
+	
 
 	@Override
 	public String toString() {

@@ -2,7 +2,7 @@
 package dao;
 
 import java.sql.*;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +21,9 @@ import com.luciagf.modelo.Persona;
 public class PersonaDAO {
 
     private Connection con;
-
+    PersonaDAO personaDAO = new PersonaDAO(con);
+    
+    
     public PersonaDAO(Connection con) {
         this.con = con;
     }
@@ -37,6 +39,48 @@ public class PersonaDAO {
            
             ps.executeUpdate();
         }
+    }
+    
+    public Persona buscarPorCredenciales(String username, String password) throws SQLException {
+        String sql = "SELECT p.id, p.nombre, p.email, p.nacionalidad, c.senior, c.fechasenior, " +
+                     "a.apodo, a.especialidad, u.rol " +
+                     "FROM persona p " +
+                     "JOIN credencial u ON p.id = u.idPersona " +
+                     "LEFT JOIN coordinacion c ON p.id = c.idPersona " +
+                     "LEFT JOIN artista a ON p.id = a.idPersona " +
+                     "WHERE u.username = ? AND u.password = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, username.toLowerCase()); 
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Long id = rs.getLong("id");
+                    String nombre = rs.getString("nombre");
+                    String email = rs.getString("email");
+                    String nacionalidad = rs.getString("nacionalidad");
+                    String rol = rs.getString("rol");
+
+                    if ("Coordinacion".equalsIgnoreCase(rol)) {
+                        boolean senior = rs.getBoolean("senior");
+                        LocalDate fechaSenior = rs.getDate("fechasenior") != null
+                                ? rs.getDate("fechasenior").toLocalDate()
+                                : null;
+                        return new Coordinacion(id, nombre, email, nacionalidad, senior, fechaSenior);
+                    } else if ("Artista".equalsIgnoreCase(rol)) {
+                        String apodo = rs.getString("apodo");
+                        String especialidadStr = rs.getString("especialidad");
+                        Long idArt=rs.getLong("idArt");
+                        Especialidad especialidad = Especialidad.valueOf(especialidadStr);
+                        return new Artista(id, nombre, email, nacionalidad,idArt ,apodo, especialidad);
+                    } else {
+                        // Invitado o rol genérico
+                        return new Persona(id, nombre, email, nacionalidad);
+                    }
+                }
+            }
+        }
+        return null; 
     }
 
     // BUSCAR POR ID

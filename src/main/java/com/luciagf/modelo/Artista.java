@@ -9,7 +9,7 @@ public class Artista extends Persona {
 
 	private Long idArt;
 	private String apodo = null;
-	Especialidad especialidad;
+	private Especialidad especialidad;
 
 	public Artista() {
 		super();

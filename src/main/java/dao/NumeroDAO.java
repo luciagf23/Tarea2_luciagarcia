@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Coordinacion;
 import com.luciagf.modelo.Espectaculo;
 import com.luciagf.modelo.Numero;
@@ -22,9 +23,11 @@ import com.luciagf.modelo.Numero;
 public class NumeroDAO {
 
 	private Connection con;
+	private final ArtistaDAO artistaDAO;
 
     public NumeroDAO(Connection con) {
         this.con = con;
+        this.artistaDAO=new ArtistaDAO(con);
     }
 	
 	
@@ -70,8 +73,35 @@ public class NumeroDAO {
 	        }
 	        return null;
 	    }
+	 
+	 public List<Numero> buscarNumerosPorEspectaculo(Long idEspectaculo) throws SQLException {
+		    List<Numero> numeros = new ArrayList<>();
+		    String sql = "SELECT id, orden, nombre, duracion FROM numero WHERE idEspectaculo = ? ORDER BY orden";
+
+		    try (PreparedStatement ps = con.prepareStatement(sql)) {
+		        ps.setLong(1, idEspectaculo);
+		        try (ResultSet rs = ps.executeQuery()) {
+		            while (rs.next()) {
+		                Numero num = new Numero(
+		                    rs.getLong("id"),
+		                    rs.getInt("orden"),
+		                    rs.getString("nombre"),
+		                    rs.getDouble("duracion"),
+		                    rs.getLong("idCoord")
+		                );
+		             
+	                    List<Artista> artistas = artistaDAO.buscarArtistasPorNumero(num.getId());
+	                    num.setArtistas(artistas);
+		                
+		                numeros.add(num);
+		            }
+		        }
+		    }
+		    return numeros;
+		}
+
 	
-	
+	//ACTUALIZAR
 	 public void actualizar(Numero numero) throws SQLException {
 
 	        String sql = "UPDATE numero SET nombre = ?, orden = ?, duracion = ?, idEspectaculo = ? " +
@@ -123,6 +153,7 @@ public class NumeroDAO {
 	                rs.getDate("fechaIni").toLocalDate(),
 	                rs.getDate("fechaFin").toLocalDate(),
 	                coord
+	                
 	            );
 
 	           
@@ -164,6 +195,7 @@ public class NumeroDAO {
 	                    rs.getDouble("duracion"),
 	                    rs.getLong("idEspectaculo")
                 );
+               
                 lista.add(n);
             }
         }

@@ -2,8 +2,8 @@ package com.luciagf.modelo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Lucía García Fernández
@@ -17,6 +17,7 @@ public class Espectaculo implements Serializable {
 	private LocalDate fechaIni;
 	private LocalDate fechaFin;
 	private Coordinacion coordinacion;
+	private List<Numero> numeros;
 
 	public Espectaculo() {
 		super();
@@ -24,14 +25,19 @@ public class Espectaculo implements Serializable {
 	}
 
 
-	public Espectaculo(Long id, String nombre, LocalDate fechaini, LocalDate fechafin, Coordinacion coordinacion) {
+	public Espectaculo(Long id, String nombre, LocalDate fechaIni, LocalDate fechaFin, Coordinacion coordinacion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
-		this.fechaIni = fechaini;
-		this.fechaFin = fechafin;
+		this.fechaIni = fechaIni;
+		this.fechaFin = fechaFin;
 		this.coordinacion = coordinacion;
+        this.numeros = new ArrayList<>();
+		
 	}
+
+
+
 
 	public Long getId() {
 		return id;
@@ -65,19 +71,34 @@ public class Espectaculo implements Serializable {
 		this.fechaFin = fechafin;
 	}
 
+
+
 	public Coordinacion getCoordinacion() {
 		return coordinacion;
 	}
+
 
 	public void setCoordinacion(Coordinacion coordinacion) {
 		this.coordinacion = coordinacion;
 	}
 
-	
+
+	public List<Numero> getNumeros() { 
+		return numeros; 
+	}
+    public void setNumeros(List<Numero> numeros) { 
+    	this.numeros = numeros; 
+    }
+
+
 	@Override
 	public String toString() {
-		return "Espectaculo [id=" + id + ", nombre=" + nombre + ", fechaini=" + fechaIni + ", fechafin=" + fechaFin
-				+ ", coordinacion=" + coordinacion +"]";
+		return "Espectaculo [id=" + id + ", nombre=" + nombre + ", fechaIni=" + fechaIni + ", fechaFin=" + fechaFin
+				+ ", coordinacion=" + coordinacion + ", numeros=" + numeros + "]";
 	}
 
+
+    
+
+	
 }

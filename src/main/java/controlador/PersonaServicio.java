@@ -6,7 +6,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.luciagf.modelo.Credencial;
+import com.luciagf.modelo.Perfil;
 import com.luciagf.modelo.Persona;
+import com.luciagf.modelo.Sesion;
 
 import dao.CredencialDAO;
 import dao.PersonaDAO;
@@ -15,10 +17,71 @@ public class PersonaServicio {
 
 	private PersonaDAO personaDAO;
 	private CredencialDAO credencialDAO;
+	private Credencial usuarioActual;
+	private Sesion sesion;
 
 	public PersonaServicio(Connection con) {
         this.personaDAO = new PersonaDAO(con);
+        this.credencialDAO=new CredencialDAO(con);
+        this.usuarioActual=null;
+        this.sesion=sesion;
     }
+	
+	
+	//LOGIN
+	public boolean login(String nombreUsuario, String password) throws SQLException {
+		try {
+		if(nombreUsuario==null || nombreUsuario.trim().isEmpty() || password==null
+				|| password.trim().isEmpty()) {
+			
+			System.out.println("usuario y contraseña no pueden estar vacios");
+			return false;
+		}
+		
+		if(nombreUsuario.equals("admin")&& password.equals("admin")) {
+			usuarioActual = new Credencial(0L, "admin", "admin", Perfil.ADMIN);
+            System.out.println("Login correcto como ADMIN.");
+            return true;
+		}
+		
+		//Buscar credencial
+		Credencial credencial=credencialDAO.buscarPorUsuario(nombreUsuario);
+		if(credencial !=null && credencial.getPassword().equals(password)) {
+			
+			sesion.login(credencial.getId(), 
+					credencial.getNombre(),
+                    credencial.getPassword(), 
+                    credencial.getPerfil());
+			System.out.println("Login correcto");
+			return true;
+			
+		}else {
+			System.out.println("Error: credenciales incorrectas");
+			return false;
+		}
+		
+		}catch (SQLException e) {
+			System.out.println("Error en login: " +e.getMessage());
+			return false;
+		}
+	}
+	
+	
+	//LOGOUT
+	public void logout() {
+	    if (sesion.isAutenticado()) {
+	        sesion.logout();
+	        System.out.println("Sesión cerrada. Ahora eres Invitado.");
+	    } else {
+	        System.out.println("No hay sesión activa.");
+	    }
+	}
+	
+	// Obtener perfil actual
+    public Perfil verPerfilActual() {
+        return sesion.getPerfilActual();
+    }
+
 	
 	
 	public boolean registrarPersona(Persona persona, Credencial credencial) {
