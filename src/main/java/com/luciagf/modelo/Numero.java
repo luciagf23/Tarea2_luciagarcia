@@ -22,8 +22,6 @@ public class Numero {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
 	public Numero(Long id, int orden, String nombre, double duracion, Long idEspectaculo) {
 		super();
 		this.id = id;
@@ -33,8 +31,6 @@ public class Numero {
 		this.idEspectaculo = idEspectaculo;
 		this.artistas = new ArrayList<>();
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -68,38 +64,31 @@ public class Numero {
 		this.duracion = duracion;
 	}
 
-	
 	public Long getIdEspectaculo() {
 		return idEspectaculo;
 	}
-
-
 
 	public void setIdEspectaculo(Long idEspectaculo) {
 		this.idEspectaculo = idEspectaculo;
 	}
 
-	public List<Artista> getArtistas() { 
-		return artistas; 
-		}
-	
-    public void setArtistas(List<Artista> artistas) { 
-    	this.artistas = artistas;
-    }
-    
-    //Metodos
-    public void addArtista(Artista artista) {
-    	artistas.add(artista);
-    }
+	public List<Artista> getArtistas() {
+		return artistas;
+	}
+
+	public void setArtistas(List<Artista> artistas) {
+		this.artistas = artistas;
+	}
+
+	// Metodos
+	public void addArtista(Artista artista) {
+		artistas.add(artista);
+	}
 
 	@Override
 	public String toString() {
 		return "Numero [id=" + id + ", orden=" + orden + ", nombre=" + nombre + ", duracion=" + duracion
 				+ ", idEspectaculo=" + idEspectaculo + "]";
 	}
-
-
-
-	
 
 }

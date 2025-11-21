@@ -8,308 +8,259 @@ import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Especialidad;
 import com.luciagf.modelo.Espectaculo;
 import com.luciagf.modelo.Numero;
-import com.luciagf.modelo.Persona;
 
 /**
-* Clase ArtistaDAO.java
-*
-* author LUCÍA GARCÍA FERNÁNDEZ
-* version 1.0
-*/
+ * Clase ArtistaDAO.java
+ *
+ * author LUCÍA GARCÍA FERNÁNDEZ version 1.0
+ */
 public class ArtistaDAO {
 
-    private Connection con;
+	private Connection con;
 
-    public ArtistaDAO(Connection con) {
-        this.con = con;
-    }
+	public ArtistaDAO(Connection con) {
+		this.con = con;
+	}
 
-  
-    // INSERTAR ARTISTA 
-    public void insertar(long idPersona, String apodo, Especialidad especialidad) throws SQLException {
+	// INSERTAR ARTISTA
+	public void insertar(long idPersona, String apodo, Especialidad especialidad) throws SQLException {
 
-        String sql = "INSERT INTO artista (apodo, idNumero, idPersona, especialidades) " +
-                     "VALUES (?, NULL, ?, ?)";
+		String sql = "INSERT INTO artista (apodo, idNumero, idPersona, especialidades) " + "VALUES (?, NULL, ?, ?)";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setString(1, apodo);
-            ps.setLong(2, idPersona);
-            ps.setString(3, especialidad.name());
+			ps.setString(1, apodo);
+			ps.setLong(2, idPersona);
+			ps.setString(3, especialidad.name());
 
-            ps.executeUpdate();
-        }
-    }
+			ps.executeUpdate();
+		}
+	}
 
-   
-    // BUSCAR ARTISTA POR IDPERSONA
-    public Artista buscarPorPersona(long idPersona) throws SQLException {
+	// BUSCAR ARTISTA POR IDPERSONA
+	public Artista buscarPorPersona(long idPersona) throws SQLException {
 
-        String sql = "SELECT * FROM artista WHERE idPersona = ?";
+		String sql = "SELECT * FROM artista WHERE idPersona = ?";
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setLong(1, idPersona);
-            ResultSet rs = ps.executeQuery();
+			ps.setLong(1, idPersona);
+			ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return new Artista(
-                    rs.getLong("id"),
-                    rs.getString("nombre"),
-                    rs.getString("email"),
-                    rs.getString("nacionalidad"),
-                    rs.getLong("idArt"),
-                    rs.getString("apodo"),
-                    Especialidad.valueOf(rs.getString("especialidades"))
-                );
-            }
-        }
-        return null;
-    }
+			if (rs.next()) {
+				return new Artista(rs.getLong("id"), rs.getString("nombre"), rs.getString("email"),
+						rs.getString("nacionalidad"), rs.getLong("idArt"), rs.getString("apodo"),
+						Especialidad.valueOf(rs.getString("especialidades")));
+			}
+		}
+		return null;
+	}
 
-    
-    //BUSCAR ARTISTA POR ID
-    public Artista obtenerArtistaPorId(Long idArtista) throws SQLException {
-        String sql = "SELECT id, nombre, email, nacionalidad, apodo, especialidades " +
-                     "FROM persona WHERE id=? AND perfil='ARTISTA'";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setLong(1, idArtista);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Artista artista = new Artista();
-                    artista.setId(rs.getLong("id"));
-                    artista.setNombre(rs.getString("nombre"));
-                    artista.setEmail(rs.getString("email"));
-                    artista.setNacionalidad(rs.getString("nacionalidad"));
-                   
-                    String apodo=rs.getString("apodo");
-                   
-                   if(apodo!=null && !apodo.trim().isEmpty()) {
-                	   artista.setApodo(apodo);
-                   }else {
-                	   artista.setApodo("sin apodo");
-                   }
-                   
-                   return artista;
-                }
-            }
-        }
-        return null;
-    }
-    
-    
-    // TRAYECTORIA
-    public List<String> obtenerTrayectoria(Long idArtista) throws SQLException {
-        List<String> trayectoria = new ArrayList<>();
-        String sql = "SELECT e.id AS idEspectaculo, e.nombre AS nombreEspectaculo, " +
-                     "n.id AS idNumero, n.nombre AS nombreNumero " +
-                     "FROM espectaculo e " +
-                     "JOIN numero n ON e.id = n.idEspectaculo " +
-                     "JOIN numero_artista na ON n.id = na.idNumero " +
-                     "WHERE na.idArtista=?";
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setLong(1, idArtista);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    trayectoria.add("Espectáculo [" + rs.getLong("idEspectaculo") + "] " +
-                                    rs.getString("nombreEspectaculo") +
-                                    " Número [" + rs.getLong("idNumero") + "] " +
-                                    rs.getString("nombreNumero"));
-                }
-            }
-        }
-        return trayectoria;
-    }
-    
+	// BUSCAR ARTISTA POR ID
+	public Artista obtenerArtistaPorId(Long idArtista) throws SQLException {
+		String sql = "SELECT id, nombre, email, nacionalidad, apodo, especialidades "
+				+ "FROM persona WHERE id=? AND perfil='ARTISTA'";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setLong(1, idArtista);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Artista artista = new Artista();
+					artista.setId(rs.getLong("id"));
+					artista.setNombre(rs.getString("nombre"));
+					artista.setEmail(rs.getString("email"));
+					artista.setNacionalidad(rs.getString("nacionalidad"));
 
-    // BUSCAR ARTISTA POR EMAIL
-    
-    public Artista buscarPorEmail(String email) throws SQLException {
+					String apodo = rs.getString("apodo");
 
-        String sql = "SELECT a.*, p.nombre, p.email, p.nacionalidad " +
-                     "FROM artista a " +
-                     "JOIN persona p ON a.idPersona = p.id " +
-                     "WHERE p.email = ?";
+					if (apodo != null && !apodo.trim().isEmpty()) {
+						artista.setApodo(apodo);
+					} else {
+						artista.setApodo("sin apodo");
+					}
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+					return artista;
+				}
+			}
+		}
+		return null;
+	}
 
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
+	// TRAYECTORIA
+	public List<String> obtenerTrayectoria(Long idArtista) throws SQLException {
+		List<String> trayectoria = new ArrayList<>();
+		String sql = "SELECT e.id AS idEspectaculo, e.nombre AS nombreEspectaculo, "
+				+ "n.id AS idNumero, n.nombre AS nombreNumero " + "FROM espectaculo e "
+				+ "JOIN numero n ON e.id = n.idEspectaculo " + "JOIN numero_artista na ON n.id = na.idNumero "
+				+ "WHERE na.idArtista=?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setLong(1, idArtista);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					trayectoria.add(
+							"Espectáculo [" + rs.getLong("idEspectaculo") + "] " + rs.getString("nombreEspectaculo")
+									+ " Número [" + rs.getLong("idNumero") + "] " + rs.getString("nombreNumero"));
+				}
+			}
+		}
+		return trayectoria;
+	}
 
-            if (rs.next()) {
-                return new Artista(
-                    rs.getLong("id"),
-                    rs.getString("nombre"),
-                    rs.getString("email"),
-                    rs.getString("nacionalidad"),
-                    rs.getLong("idArt"),
-                    rs.getString("apodo"),
-                    Especialidad.valueOf(rs.getString("especialidades"))
-                );
-            }
-        }
-        return null;
-    }
+	// BUSCAR ARTISTA POR EMAIL
 
-    //BUSCAR ARTISTA POR NUMERO
-    public List<Artista> buscarArtistasPorNumero(Long idNumero) throws SQLException {
-        List<Artista> artistas = new ArrayList<>();
-        String sql = "SELECT a.idArt, p.nombre, p.nacionalidad, a.apodo, ea.especialidad " +
-                     "FROM participa pa " +
-                     "JOIN artista a ON pa.idArt = a.idArt " +
-                     "JOIN persona p ON a.idArt = p.id " +
-                     "JOIN especialidad_artista ea ON a.idArt = ea.idArt " +
-                     "WHERE pa.idNumero = ?";
+	public Artista buscarPorEmail(String email) throws SQLException {
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setLong(1, idNumero);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Artista art = new Artista(
-                        rs.getLong("id"),
-                        rs.getString("nombre"),
-                        rs.getString("email"),
-                        rs.getString("nacionalidad"),
-                        rs.getLong("idArt"),
-                        rs.getString("apodo"),
-                        Especialidad.valueOf(rs.getString("especialidades"))
-                        
-                    );
-                    
-                    artistas.add(art);
-                }
-            }
-        }
-        return artistas;
-    }
+		String sql = "SELECT a.*, p.nombre, p.email, p.nacionalidad " + "FROM artista a "
+				+ "JOIN persona p ON a.idPersona = p.id " + "WHERE p.email = ?";
 
-    
-    // LISTAR TODOS LOS ARTISTAS
-        public List<Artista> listarTodos() throws SQLException {
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-        List<Artista> lista = new ArrayList<>();
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
 
-        String sql = "SELECT a.*, p.nombre, p.email, p.nacionalidad " +
-                     "FROM artista a " +
-                     "JOIN persona p ON a.idPersona = p.id";
+			if (rs.next()) {
+				return new Artista(rs.getLong("id"), rs.getString("nombre"), rs.getString("email"),
+						rs.getString("nacionalidad"), rs.getLong("idArt"), rs.getString("apodo"),
+						Especialidad.valueOf(rs.getString("especialidades")));
+			}
+		}
+		return null;
+	}
 
-        try (Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+	// BUSCAR ARTISTA POR NUMERO
+	public List<Artista> buscarArtistasPorNumero(Long idNumero) throws SQLException {
+		List<Artista> artistas = new ArrayList<>();
+		String sql = "SELECT a.idArt, p.nombre, p.nacionalidad, a.apodo, ea.especialidad " + "FROM participa pa "
+				+ "JOIN artista a ON pa.idArt = a.idArt " + "JOIN persona p ON a.idArt = p.id "
+				+ "JOIN especialidad_artista ea ON a.idArt = ea.idArt " + "WHERE pa.idNumero = ?";
 
-            while (rs.next()) {
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setLong(1, idNumero);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Artista art = new Artista(rs.getLong("id"), rs.getString("nombre"), rs.getString("email"),
+							rs.getString("nacionalidad"), rs.getLong("idArt"), rs.getString("apodo"),
+							Especialidad.valueOf(rs.getString("especialidades"))
 
-                Artista artista = new Artista(
-                    rs.getLong("id"),
-                    rs.getString("nombre"),
-                    rs.getString("email"),
-                    rs.getString("nacionalidad"),
-                    rs.getLong("idArt"),
-                    rs.getString("apodo"),
-                    Especialidad.valueOf(rs.getString("especialidades"))
-                );
+					);
 
-                lista.add(artista);
-            }
-        }
-        return lista;
-    }
+					artistas.add(art);
+				}
+			}
+		}
+		return artistas;
+	}
 
-    // ACTUALIZAR ARTISTA
-    public void actualizar(long idPersona, String apodo, Especialidad especialidad) throws SQLException {
+	// LISTAR TODOS LOS ARTISTAS
+	public List<Artista> listarTodos() throws SQLException {
 
-        String sql = "UPDATE artista SET apodo = ?, especialidades = ? WHERE idPersona = ?";
+		List<Artista> lista = new ArrayList<>();
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+		String sql = "SELECT a.*, p.nombre, p.email, p.nacionalidad " + "FROM artista a "
+				+ "JOIN persona p ON a.idPersona = p.id";
 
-            ps.setString(1, apodo);
-            ps.setString(2, especialidad.name());
-            ps.setLong(3, idPersona);
+		try (Statement st = con.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
-            ps.executeUpdate();
-        }
-    }
+			while (rs.next()) {
 
-   
-    // ELIMINAR ARTISTA
-    public boolean eliminar(long idPersona) throws SQLException {
+				Artista artista = new Artista(rs.getLong("id"), rs.getString("nombre"), rs.getString("email"),
+						rs.getString("nacionalidad"), rs.getLong("idArt"), rs.getString("apodo"),
+						Especialidad.valueOf(rs.getString("especialidades")));
 
-        String sql = "DELETE FROM artista WHERE idPersona = ?";
+				lista.add(artista);
+			}
+		}
+		return lista;
+	}
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+	// ACTUALIZAR ARTISTA
+	public void actualizar(long idPersona, String apodo, Especialidad especialidad) throws SQLException {
 
-            ps.setLong(1, idPersona);
+		String sql = "UPDATE artista SET apodo = ?, especialidades = ? WHERE idPersona = ?";
 
-            return ps.executeUpdate() > 0;
-        }
-    }
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-    // ASIGNAR NÚMERO AL ARTISTA
-    public void asignarNumero(long idPersona, long idNumero) throws SQLException {
+			ps.setString(1, apodo);
+			ps.setString(2, especialidad.name());
+			ps.setLong(3, idPersona);
 
-        String sql = "UPDATE artista SET idNumero = ? WHERE idPersona = ?";
+			ps.executeUpdate();
+		}
+	}
 
-        try (PreparedStatement ps = con.prepareStatement(sql)) {
+	// ELIMINAR ARTISTA
+	public boolean eliminar(long idPersona) throws SQLException {
 
-            ps.setLong(1, idNumero);
-            ps.setLong(2, idPersona);
+		String sql = "DELETE FROM artista WHERE idPersona = ?";
 
-            ps.executeUpdate();
-        }
-    }
-    
-    public List<Espectaculo> obtenerEspectaculosDeArtista(Long idArtista) {
-        List<Espectaculo> lista = new ArrayList<>();
-        String sql = "SELECT DISTINCT e.id, e.titulo, e.descripcion, e.fecha_inicio, e.fecha_fin, e.duracion " +
-                     "FROM espectaculo e " +
-                     "JOIN numero n ON e.id = n.id_espectaculo " +
-                     "JOIN numero_artista na ON n.id = na.id_numero " +
-                     "WHERE na.id_artista = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-        try (
-             PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setLong(1, idPersona);
 
-            ps.setLong(1, idArtista);
-            ResultSet rs = ps.executeQuery();
+			return ps.executeUpdate() > 0;
+		}
+	}
 
-            while (rs.next()) {
-                Espectaculo e = new Espectaculo();
-                e.setId(rs.getLong("id"));
-                e.setNombre(rs.getString("titulo"));
-                e.setFechaini(rs.getDate("fecha_inicio").toLocalDate());
-                e.setFechafin(rs.getDate("fecha_fin").toLocalDate());
-                lista.add(e);
-            }
+	// ASIGNAR NÚMERO AL ARTISTA
+	public void asignarNumero(long idPersona, long idNumero) throws SQLException {
 
-        } catch (SQLException ex) {
-            System.out.println("Error al obtener espectáculos del artista: " + ex.getMessage());
-        }
-        return lista;
-    }
-    
-    public List<Numero> obtenerNumerosDeArtista(Long idArtista) {
-        List<Numero> lista = new ArrayList<>();
-        String sql = "SELECT n.id, n.nombre, n.duracion " +
-                     "FROM numero n " +
-                     "JOIN numero_artista na ON n.id = na.id_numero " +
-                     "WHERE na.id_artista = ?";
+		String sql = "UPDATE artista SET idNumero = ? WHERE idPersona = ?";
 
-        try (
-             PreparedStatement ps = con.prepareStatement(sql)) {
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setLong(1, idArtista);
-            ResultSet rs = ps.executeQuery();
+			ps.setLong(1, idNumero);
+			ps.setLong(2, idPersona);
 
-            while (rs.next()) {
-                Numero n = new Numero();
-                n.setId(rs.getLong("id"));
-                n.setNombre(rs.getString("nombre"));
-                n.setDuracion(rs.getInt("duracion"));
-                lista.add(n);
-            }
+			ps.executeUpdate();
+		}
+	}
 
-        } catch (SQLException ex) {
-            System.out.println("Error al obtener números del artista: " + ex.getMessage());
-        }
-        return lista;
-    }
+	public List<Espectaculo> obtenerEspectaculosDeArtista(Long idArtista) {
+		List<Espectaculo> lista = new ArrayList<>();
+		String sql = "SELECT DISTINCT e.id, e.titulo, e.descripcion, e.fecha_inicio, e.fecha_fin, e.duracion "
+				+ "FROM espectaculo e " + "JOIN numero n ON e.id = n.id_espectaculo "
+				+ "JOIN numero_artista na ON n.id = na.id_numero " + "WHERE na.id_artista = ?";
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setLong(1, idArtista);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Espectaculo e = new Espectaculo();
+				e.setId(rs.getLong("id"));
+				e.setNombre(rs.getString("titulo"));
+				e.setFechaini(rs.getDate("fecha_inicio").toLocalDate());
+				e.setFechafin(rs.getDate("fecha_fin").toLocalDate());
+				lista.add(e);
+			}
+
+		} catch (SQLException ex) {
+			System.out.println("Error al obtener espectáculos del artista: " + ex.getMessage());
+		}
+		return lista;
+	}
+
+	public List<Numero> obtenerNumerosDeArtista(Long idArtista) {
+		List<Numero> lista = new ArrayList<>();
+		String sql = "SELECT n.id, n.nombre, n.duracion " + "FROM numero n "
+				+ "JOIN numero_artista na ON n.id = na.id_numero " + "WHERE na.id_artista = ?";
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setLong(1, idArtista);
+			ResultSet rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Numero n = new Numero();
+				n.setId(rs.getLong("id"));
+				n.setNombre(rs.getString("nombre"));
+				n.setDuracion(rs.getInt("duracion"));
+				lista.add(n);
+			}
+
+		} catch (SQLException ex) {
+			System.out.println("Error al obtener números del artista: " + ex.getMessage());
+		}
+		return lista;
+	}
 }

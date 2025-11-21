@@ -19,14 +19,12 @@ import com.luciagf.modelo.Numero;
 /**
  * Clase EspectaculoDAO.java
  *
- * author LUCÍA GARCÍA FERNÁNDEZ 
- * version 1.0
+ * author LUCÍA GARCÍA FERNÁNDEZ version 1.0
  */
 
 public class EspectaculoDAO {
 
 	private Connection con;
-	
 
 	public EspectaculoDAO(Connection con) {
 		this.con = con;
@@ -51,144 +49,112 @@ public class EspectaculoDAO {
 
 	}
 
-	//BUSCAR POR NOMBRE
+	// BUSCAR POR NOMBRE
 	public Espectaculo buscarPorNombre(String nombre) throws SQLException {
-	    String sql = "SELECT id, nombre, fechaInicio, fechaFin, idCoordinacion FROM espectaculo WHERE nombre = ?";
-	    try (PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setString(1, nombre);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            if (rs.next()) {
-	                Espectaculo e = new Espectaculo();
-	                e.setId(rs.getLong("id"));
-	                e.setNombre(rs.getString("nombre"));
-	                e.setFechaini(rs.getDate("fechaInicio").toLocalDate());
-	                e.setFechafin(rs.getDate("fechaFin").toLocalDate());
-	                
-	                return e;
-	            }
-	        }
-	    }
-	    return null; 
-	    }
-	
+		String sql = "SELECT id, nombre, fechaInicio, fechaFin, idCoordinacion FROM espectaculo WHERE nombre = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, nombre);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Espectaculo e = new Espectaculo();
+					e.setId(rs.getLong("id"));
+					e.setNombre(rs.getString("nombre"));
+					e.setFechaini(rs.getDate("fechaInicio").toLocalDate());
+					e.setFechafin(rs.getDate("fechaFin").toLocalDate());
+
+					return e;
+				}
+			}
+		}
+		return null;
+	}
 
 	// BUSCAR ESPECTÁCULO POR ID
 	public Espectaculo buscarEspectaculoCompleto(Long id) throws SQLException {
-	    Espectaculo espectaculo = null;
+		Espectaculo espectaculo = null;
 
-	    // Buscar espectáculo + coordinación
-	    String sql = "SELECT e.id, e.nombre, e.fechaIni, e.fechaFin, " +
-	                 "p.id AS idPersona, p.nombre AS nombrePersona, p.email, p.nacionalidad, " +
-	                 "c.senior, c.fechasenior " +
-	                 "FROM espectaculo e " +
-	                 "JOIN coordinacion c ON e.idCoordinacion = c.idPersona " +
-	                 "JOIN persona p ON c.idPersona = p.id " +
-	                 "WHERE e.id = ?";
+		// Buscar espectáculo + coordinación
+		String sql = "SELECT e.id, e.nombre, e.fechaIni, e.fechaFin, "
+				+ "p.id AS idPersona, p.nombre AS nombrePersona, p.email, p.nacionalidad, " + "c.senior, c.fechasenior "
+				+ "FROM espectaculo e " + "JOIN coordinacion c ON e.idCoordinacion = c.idPersona "
+				+ "JOIN persona p ON c.idPersona = p.id " + "WHERE e.id = ?";
 
-	    try (PreparedStatement ps = con.prepareStatement(sql)) {
-	        ps.setLong(1, id);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            if (rs.next()) {
-	                Coordinacion coord = new Coordinacion(
-	                        rs.getLong("idPersona"),
-	                        rs.getString("nombrePersona"),
-	                        rs.getString("email"),
-	                        rs.getString("nacionalidad"),
-	                        rs.getBoolean("senior"),
-	                        rs.getDate("fechasenior") != null ? rs.getDate("fechasenior").toLocalDate() : null
-	                );
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setLong(1, id);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Coordinacion coord = new Coordinacion(rs.getLong("idPersona"), rs.getString("nombrePersona"),
+							rs.getString("email"), rs.getString("nacionalidad"), rs.getBoolean("senior"),
+							rs.getDate("fechasenior") != null ? rs.getDate("fechasenior").toLocalDate() : null);
 
-	                espectaculo = new Espectaculo(
-	                        rs.getLong("id"),
-	                        rs.getString("nombre"),
-	                        rs.getDate("fechaIni").toLocalDate(),
-	                        rs.getDate("fechaFin").toLocalDate(),
-	                        coord
-	                );
-	            }
-	        }
-	    }
+					espectaculo = new Espectaculo(rs.getLong("id"), rs.getString("nombre"),
+							rs.getDate("fechaIni").toLocalDate(), rs.getDate("fechaFin").toLocalDate(), coord);
+				}
+			}
+		}
 
-	    if (espectaculo == null) 
-	    	return null;
+		if (espectaculo == null)
+			return null;
 
-	    // Buscar números del espectáculo
-	    String sqlNumeros = "SELECT idNumero, nombre, duracion, orden FROM numero WHERE idEspectaculo = ?";
-	    try (PreparedStatement ps = con.prepareStatement(sqlNumeros)) {
-	        ps.setLong(1, id);
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                Numero numero = new Numero(
-	                        rs.getLong("idNumero"),
-	                        rs.getInt("orden"),
-	                        rs.getString("nombre"),
-	                        rs.getDouble("duracion"),
-	                        rs.getLong("idEspectaculo")
-	                        
-	                        
-	                );
+		// Buscar números del espectáculo
+		String sqlNumeros = "SELECT idNumero, nombre, duracion, orden FROM numero WHERE idEspectaculo = ?";
+		try (PreparedStatement ps = con.prepareStatement(sqlNumeros)) {
+			ps.setLong(1, id);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					Numero numero = new Numero(rs.getLong("idNumero"), rs.getInt("orden"), rs.getString("nombre"),
+							rs.getDouble("duracion"), rs.getLong("idEspectaculo")
 
-	                // Buscar artistas de cada número
-	                String sqlArtistas = "SELECT a.idPersona, p.nombre, p.email, p.nacionalidad, a.apodo, a.especialidad " +
-	                                     "FROM artista a " +
-	                                     "JOIN persona p ON a.idPersona = p.id " +
-	                                     "JOIN numero_artista na ON a.idPersona = na.idArtista " +
-	                                     "WHERE na.idNumero = ?";
-	                try (PreparedStatement psArt = con.prepareStatement(sqlArtistas)) {
-	                    psArt.setLong(1, numero.getId());
-	                    try (ResultSet rsArt = psArt.executeQuery()) {
-	                        while (rsArt.next()) {
-	                        	Artista artista = new Artista(
-	                        		    rsArt.getLong("idPersona"),
-	                        		    rsArt.getString("nombre"),
-	                        		    rsArt.getString("email"),
-	                        		    rsArt.getString("nacionalidad"),
-	                        		    rsArt.getString("apodo"),
-	                        		    Especialidad.valueOf(rsArt.getString("especialidad").toUpperCase())
-	                        		);
-	                        		numero.addArtista(artista);
-	                        }
-	                    }
-	                }
+					);
 
-	                espectaculo.addNumero(numero);
-	            }
-	        }
-	    }
+					// Buscar artistas de cada número
+					String sqlArtistas = "SELECT a.idPersona, p.nombre, p.email, p.nacionalidad, a.apodo, a.especialidad "
+							+ "FROM artista a " + "JOIN persona p ON a.idPersona = p.id "
+							+ "JOIN numero_artista na ON a.idPersona = na.idArtista " + "WHERE na.idNumero = ?";
+					try (PreparedStatement psArt = con.prepareStatement(sqlArtistas)) {
+						psArt.setLong(1, numero.getId());
+						try (ResultSet rsArt = psArt.executeQuery()) {
+							while (rsArt.next()) {
+								Artista artista = new Artista(rsArt.getLong("idPersona"), rsArt.getString("nombre"),
+										rsArt.getString("email"), rsArt.getString("nacionalidad"),
+										rsArt.getString("apodo"),
+										Especialidad.valueOf(rsArt.getString("especialidad").toUpperCase()));
+								numero.addArtista(artista);
+							}
+						}
+					}
 
-	    return espectaculo;
+					espectaculo.addNumero(numero);
+				}
+			}
+		}
+
+		return espectaculo;
 	}
 
-
-	
-	
-	
-	//LISTAR BASICOS
+	// LISTAR BASICOS
 	public List<Espectaculo> listarBasicos() throws SQLException {
-	    List<Espectaculo> espectaculos = new ArrayList<>();
+		List<Espectaculo> espectaculos = new ArrayList<>();
 
-	    String sql = "SELECT idEspectaculo, nombre, fechaInicio, fechaFin FROM espectaculo";
+		String sql = "SELECT idEspectaculo, nombre, fechaInicio, fechaFin FROM espectaculo";
 
-	    try (PreparedStatement ps = con.prepareStatement(sql);
-	         ResultSet rs = ps.executeQuery()) {
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 
-	        while (rs.next()) {
-	            Long id = rs.getLong("idEspectaculo");
-	            String nombre = rs.getString("nombre");
-	            LocalDate inicio = rs.getDate("fechaInicio").toLocalDate();
-	            LocalDate fin = rs.getDate("fechaFin").toLocalDate();
+			while (rs.next()) {
+				Long id = rs.getLong("idEspectaculo");
+				String nombre = rs.getString("nombre");
+				LocalDate inicio = rs.getDate("fechaInicio").toLocalDate();
+				LocalDate fin = rs.getDate("fechaFin").toLocalDate();
 
-	            // Constructor básico de Espectaculo (solo con id, nombre y fechas)
-	            Espectaculo e = new Espectaculo(id, nombre, inicio, fin);
-	            espectaculos.add(e);
-	        }
-	    }
+				// Constructor básico de Espectaculo (solo con id, nombre y fechas)
+				Espectaculo e = new Espectaculo(id, nombre, inicio, fin);
+				espectaculos.add(e);
+			}
+		}
 
-	    return espectaculos;
+		return espectaculos;
 	}
 
-	
-	
 	// LISTAR TODOS LOS ESPECTÁCULOS
 	public List<Espectaculo> listarTodos() {
 		List<Espectaculo> espectaculos = new ArrayList<>();
@@ -204,16 +170,11 @@ public class EspectaculoDAO {
 						rs.getString("email"), rs.getString("nacionalidad"), rs.getBoolean("senior"),
 						rs.getDate("fechasenior") != null ? rs.getDate("fechasenior").toLocalDate() : null);
 
-				Espectaculo esp = new Espectaculo(
-						rs.getLong("id"), 
-						rs.getString("nombre"),
-						rs.getDate("fechaIni").toLocalDate(), 
-						rs.getDate("fechaFin").toLocalDate(),
-						coord
-					);
+				Espectaculo esp = new Espectaculo(rs.getLong("id"), rs.getString("nombre"),
+						rs.getDate("fechaIni").toLocalDate(), rs.getDate("fechaFin").toLocalDate(), coord);
 
 				espectaculos.add(esp);
-			
+
 			}
 		} catch (SQLException e) {
 			System.out.println("Error al listar espectáculos: " + e.getMessage());
@@ -221,48 +182,47 @@ public class EspectaculoDAO {
 		}
 		return espectaculos;
 	}
-	
-	
-	//INSERTAR
-		public void insertar(Espectaculo espectaculo) throws SQLException {
-			String sql = "INSERT INTO espectaculo (nombre, fechaInicio, fechaFin, idCoordinacion) VALUES (?, ?, ?, ?)";
-	        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-	            ps.setString(1, espectaculo.getNombre());
-	            ps.setDate(2, Date.valueOf(espectaculo.getFechaini()));
-	            ps.setDate(3, Date.valueOf(espectaculo.getFechafin()));
-	            ps.setLong(4, espectaculo.getCoordinacion().getId());
 
-	            ps.executeUpdate();
+	// INSERTAR
+	public void insertar(Espectaculo espectaculo) throws SQLException {
+		String sql = "INSERT INTO espectaculo (nombre, fechaInicio, fechaFin, idCoordinacion) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+			ps.setString(1, espectaculo.getNombre());
+			ps.setDate(2, Date.valueOf(espectaculo.getFechaini()));
+			ps.setDate(3, Date.valueOf(espectaculo.getFechafin()));
+			ps.setLong(4, espectaculo.getCoordinacion().getId());
 
-	            try (ResultSet rs = ps.getGeneratedKeys()) {
-	                if (rs.next()) {
-	                    espectaculo.setId(rs.getLong(1));
-	                }
-	            }
-	        }
-	      
+			ps.executeUpdate();
+
+			try (ResultSet rs = ps.getGeneratedKeys()) {
+				if (rs.next()) {
+					espectaculo.setId(rs.getLong(1));
+				}
+			}
 		}
-		
-		// Actualizar espectáculo
-	        public void actualizar(Espectaculo espectaculo) throws SQLException {
-	            String sql = "UPDATE espectaculo SET nombre=?, fechaInicio=?, fechaFin=?, idCoordinacion=? WHERE id=?";
-	            try (PreparedStatement ps = con.prepareStatement(sql)) {
-	                ps.setString(1, espectaculo.getNombre());
-	                ps.setDate(2, Date.valueOf(espectaculo.getFechaini()));
-	                ps.setDate(3, Date.valueOf(espectaculo.getFechafin()));
-	                ps.setLong(4, espectaculo.getCoordinacion().getId());
-	                ps.setLong(5, espectaculo.getId());
 
-	                ps.executeUpdate();
-	            }
-	        }
-		
-	     // Eliminar espectáculo
-	        public void eliminar(Long id) throws SQLException {
-	            String sql = "DELETE FROM espectaculo WHERE id=?";
-	            try (PreparedStatement ps = con.prepareStatement(sql)) {
-	                ps.setLong(1, id);
-	                ps.executeUpdate();
-	            }
-	        }
+	}
+
+	// Actualizar espectáculo
+	public void actualizar(Espectaculo espectaculo) throws SQLException {
+		String sql = "UPDATE espectaculo SET nombre=?, fechaInicio=?, fechaFin=?, idCoordinacion=? WHERE id=?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, espectaculo.getNombre());
+			ps.setDate(2, Date.valueOf(espectaculo.getFechaini()));
+			ps.setDate(3, Date.valueOf(espectaculo.getFechafin()));
+			ps.setLong(4, espectaculo.getCoordinacion().getId());
+			ps.setLong(5, espectaculo.getId());
+
+			ps.executeUpdate();
+		}
+	}
+
+	// Eliminar espectáculo
+	public void eliminar(Long id) throws SQLException {
+		String sql = "DELETE FROM espectaculo WHERE id=?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setLong(1, id);
+			ps.executeUpdate();
+		}
+	}
 }

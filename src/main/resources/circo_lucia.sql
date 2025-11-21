@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-11-2025 a las 17:02:56
+-- Tiempo de generación: 21-11-2025 a las 22:47:00
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Versión de PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `circo_lucia`
+-- Base de datos: `circo_lucia2`
 --
 
 -- --------------------------------------------------------
@@ -62,10 +62,10 @@ CREATE TABLE `coordinacion` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `credenciales`
+-- Estructura de tabla para la tabla `credencial`
 --
 
-CREATE TABLE `credenciales` (
+CREATE TABLE `credencial` (
   `id` bigint(11) NOT NULL,
   `nombre` varchar(30) NOT NULL,
   `contrasenia` varchar(100) NOT NULL,
@@ -141,9 +141,9 @@ ALTER TABLE `coordinacion`
   ADD KEY `idPersona` (`idPersona`);
 
 --
--- Indices de la tabla `credenciales`
+-- Indices de la tabla `credencial`
 --
-ALTER TABLE `credenciales`
+ALTER TABLE `credencial`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `nombre` (`nombre`);
 
@@ -227,7 +227,7 @@ ALTER TABLE `numero`
 -- Filtros para la tabla `persona`
 --
 ALTER TABLE `persona`
-  ADD CONSTRAINT `persona_ibfk_1` FOREIGN KEY (`idCredenciales`) REFERENCES `credenciales` (`id`);
+  ADD CONSTRAINT `persona_ibfk_1` FOREIGN KEY (`idCredenciales`) REFERENCES `credencial` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

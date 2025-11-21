@@ -24,10 +24,10 @@ public class Espectaculo {
 	}
 
 	public Espectaculo(Long id, String nombre, LocalDate fechaInicio, LocalDate fechaFin) {
-	    this.id = id;
-	    this.nombre = nombre;
-	    this.fechaIni = fechaInicio;
-	    this.fechaFin = fechaFin;
+		this.id = id;
+		this.nombre = nombre;
+		this.fechaIni = fechaInicio;
+		this.fechaFin = fechaFin;
 	}
 
 	public Espectaculo(Long id, String nombre, LocalDate fechaIni, LocalDate fechaFin, Coordinacion coordinacion) {
@@ -37,12 +37,9 @@ public class Espectaculo {
 		this.fechaIni = fechaIni;
 		this.fechaFin = fechaFin;
 		this.coordinacion = coordinacion;
-        this.numeros = new ArrayList<>();
-		
+		this.numeros = new ArrayList<>();
+
 	}
-
-
-
 
 	public Long getId() {
 		return id;
@@ -76,30 +73,26 @@ public class Espectaculo {
 		this.fechaFin = fechafin;
 	}
 
-
-
 	public Coordinacion getCoordinacion() {
 		return coordinacion;
 	}
-
 
 	public void setCoordinacion(Coordinacion coordinacion) {
 		this.coordinacion = coordinacion;
 	}
 
-
-	public List<Numero> getNumeros() { 
-		return numeros; 
+	public List<Numero> getNumeros() {
+		return numeros;
 	}
-    public void setNumeros(List<Numero> numeros) { 
-    	this.numeros = numeros; 
-    }
-    
-    //Metodos
-    public void addNumero(Numero numero) {
-    	numeros.add(numero);
-    }
 
+	public void setNumeros(List<Numero> numeros) {
+		this.numeros = numeros;
+	}
+
+	// Metodos
+	public void addNumero(Numero numero) {
+		numeros.add(numero);
+	}
 
 	@Override
 	public String toString() {
@@ -107,8 +100,4 @@ public class Espectaculo {
 				+ ", coordinacion=" + coordinacion + ", numeros=" + numeros + "]";
 	}
 
-
-    
-
-	
 }

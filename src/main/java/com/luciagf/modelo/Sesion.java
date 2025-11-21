@@ -20,13 +20,11 @@ public class Sesion {
 		this.id = id;
 		this.perfilActual = perfilActual;
 	}
-	
 
 	public Sesion() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 
 	public Long getId() {
 		return id;
@@ -59,35 +57,35 @@ public class Sesion {
 	public void setPerfilActual(Perfil perfilActual) {
 		this.perfilActual = perfilActual;
 	}
-	
-	 public Persona getPersonaActual() {
-	        return personaActual;
-	    }
 
-	    public void setPersonaActual(Persona personaActual) {
-	        this.personaActual = personaActual;
-	    }
-	
+	public Persona getPersonaActual() {
+		return personaActual;
+	}
+
+	public void setPersonaActual(Persona personaActual) {
+		this.personaActual = personaActual;
+	}
+
 	// Métodos de login/logout
-    public void login(Long id, String nombreUsuario, String password, Perfil perfil) {
-        this.id = id;
-        this.nombreUsuario = nombreUsuario;
-        this.password = password;
-        this.perfilActual = perfil;
-    }
-	
-    public void logout() {
-        this.id = null;
-        this.nombreUsuario = null;
-        this.password = null;
-        this.perfilActual = Perfil.INVITADO;
-        this.personaActual=null;
-    }
-    
-    // Saber si hay sesión activa
-    public boolean isAutenticado() {
-        return perfilActual != Perfil.INVITADO;
-    }
+	public void login(Long id, String nombreUsuario, String password, Perfil perfil) {
+		this.id = id;
+		this.nombreUsuario = nombreUsuario;
+		this.password = password;
+		this.perfilActual = perfil;
+	}
+
+	public void logout() {
+		this.id = null;
+		this.nombreUsuario = null;
+		this.password = null;
+		this.perfilActual = Perfil.INVITADO;
+		this.personaActual = null;
+	}
+
+	// Saber si hay sesión activa
+	public boolean isAutenticado() {
+		return perfilActual != Perfil.INVITADO;
+	}
 
 	@Override
 	public String toString() {

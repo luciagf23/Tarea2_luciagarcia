@@ -5,7 +5,7 @@ package com.luciagf.modelo;
  * @version 1.0
  * @since 2025
  */
-public class Persona{
+public class Persona {
 
 	protected Long id;
 	protected String nombre;
@@ -23,7 +23,7 @@ public class Persona{
 		this.nombre = nombre;
 		this.email = email;
 		this.nacionalidad = nacionalidad;
-	
+
 	}
 
 	public Long getId() {
@@ -58,7 +58,6 @@ public class Persona{
 		this.nacionalidad = nacionalidad;
 	}
 
-	
 	public Long getIdCredenciales() {
 		return idCredenciales;
 	}
@@ -67,7 +66,6 @@ public class Persona{
 		this.idCredenciales = idCredenciales;
 	}
 
-	
 	public Perfil getPerfil() {
 		return perfil;
 	}
@@ -78,10 +76,8 @@ public class Persona{
 
 	@Override
 	public String toString() {
-		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", nacionalidad=" + nacionalidad + ", credenciales=" +idCredenciales+ "]";
+		return "Persona [id=" + id + ", nombre=" + nombre + ", email=" + email + ", nacionalidad=" + nacionalidad
+				+ ", credenciales=" + idCredenciales + "]";
 	}
-
-	
-	
 
 }
