@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Especialidad;
+import com.luciagf.modelo.Persona;
 
 /**
 * Clase ArtistaDAO.java
@@ -64,6 +65,60 @@ public class ArtistaDAO {
         return null;
     }
 
+    
+    //BUSCAR ARTISTA POR ID
+    public Artista obtenerArtistaPorId(Long idArtista) throws SQLException {
+        String sql = "SELECT id, nombre, email, nacionalidad, apodo, especialidades " +
+                     "FROM persona WHERE id=? AND perfil='ARTISTA'";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, idArtista);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Artista artista = new Artista();
+                    artista.setId(rs.getLong("id"));
+                    artista.setNombre(rs.getString("nombre"));
+                    artista.setEmail(rs.getString("email"));
+                    artista.setNacionalidad(rs.getString("nacionalidad"));
+                   
+                    String apodo=rs.getString("apodo");
+                   
+                   if(apodo!=null && !apodo.trim().isEmpty()) {
+                	   artista.setApodo(apodo);
+                   }else {
+                	   artista.setApodo("sin apodo");
+                   }
+                   
+                   return artista;
+                }
+            }
+        }
+        return null;
+    }
+    
+    
+    // TRAYECTORIA
+    public List<String> obtenerTrayectoria(Long idArtista) throws SQLException {
+        List<String> trayectoria = new ArrayList<>();
+        String sql = "SELECT e.id AS idEspectaculo, e.nombre AS nombreEspectaculo, " +
+                     "n.id AS idNumero, n.nombre AS nombreNumero " +
+                     "FROM espectaculo e " +
+                     "JOIN numero n ON e.id = n.idEspectaculo " +
+                     "JOIN numero_artista na ON n.id = na.idNumero " +
+                     "WHERE na.idArtista=?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setLong(1, idArtista);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    trayectoria.add("Espectáculo [" + rs.getLong("idEspectaculo") + "] " +
+                                    rs.getString("nombreEspectaculo") +
+                                    " Número [" + rs.getLong("idNumero") + "] " +
+                                    rs.getString("nombreNumero"));
+                }
+            }
+        }
+        return trayectoria;
+    }
+    
 
     // BUSCAR ARTISTA POR EMAIL
     

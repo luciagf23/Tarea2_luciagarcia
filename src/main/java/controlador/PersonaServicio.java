@@ -28,43 +28,32 @@ public class PersonaServicio {
     }
 	
 	//LOGIN
-	public boolean login(String nombreUsuario, String password) throws SQLException {
-		try {
-		if(nombreUsuario==null || nombreUsuario.trim().isEmpty() || password==null
-				|| password.trim().isEmpty()) {
-			
-			System.out.println("usuario y contraseña no pueden estar vacios");
-			return false;
-		}
-		
-		if(nombreUsuario.equals("admin")&& password.equals("admin")) {
-			usuarioActual = new Credencial(0L, "admin", "admin", Perfil.ADMIN);
-            System.out.println("Login correcto como ADMIN.");
-            return true;
-		}
-		
-		//Buscar credencial
-		Credencial credencial=credencialDAO.buscarPorUsuario(nombreUsuario);
-		if(credencial !=null && credencial.getPassword().equals(password)) {
-			
-			sesion.login(credencial.getId(), 
-					credencial.getNombre(),
-                    credencial.getPassword(), 
-                    credencial.getPerfil());
-			System.out.println("Login correcto");
-			return true;
-			
-		}else {
-			System.out.println("Error: credenciales incorrectas");
-			return false;
-		}
-		
-		}catch (SQLException e) {
-			System.out.println("Error en login: " +e.getMessage());
-			return false;
-		}
+	public boolean login(String usuario, String password) {
+	    try {
+	        // Buscar persona por usuario y contraseña
+	        Persona persona = personaDAO.buscarPorUsuario(usuario, password);
+
+	        if (persona != null) {
+	            // Guardar la persona en la sesión
+	            sesion.setPersonaActual(persona);
+
+	            // Guardar el perfil de esa persona en la sesión
+	            sesion.setPerfilActual(persona.getPerfil());
+
+	            System.out.println("Login correcto. Bienvenido/a " + persona.getNombre() +
+	                               " con perfil " + persona.getPerfil());
+	            return true;
+	        } else {
+	            System.out.println("Usuario o contraseña incorrectos.");
+	            return false;
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Error en login: " + e.getMessage());
+	        return false;
+	    }
 	}
-	
+
 	
 	//LOGOUT
 	public void logout() {

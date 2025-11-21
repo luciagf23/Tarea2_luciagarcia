@@ -52,7 +52,7 @@ public class EspectaculoServicio {
              if (sesion.getPerfilActual() == Perfil.COORDINACION) {
                  espectaculo.setCoordinacion((Coordinacion)sesion.getPersonaActual());
              } else if (sesion.getPerfilActual() == Perfil.ADMIN) {
-                 Persona coordinador = personaDAO.seleccionarCoordinador();
+                 Coordinacion coordinador = personaDAO.seleccionarCoordinador();
                  espectaculo.setCoordinacion((Coordinacion)coordinador);
              }
 
@@ -151,8 +151,8 @@ public class EspectaculoServicio {
                     System.out.println("   - " + a.getNombre() +
                                        " (" + a.getNacionalidad() + ")" +
                                        (a.getApodo() != null ? " Apodo: " + a.getApodo() : ""));
-                    if (a.getEspecialidad() != null) {
-                        System.out.println("Especialidad: " + a.getEspecialidad());
+                    if (a.getEspecialidades() != null) {
+                        System.out.println("Especialidad: " + a.getEspecialidades());
                     }
                 }
             }

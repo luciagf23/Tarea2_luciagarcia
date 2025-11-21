@@ -9,6 +9,7 @@ import java.util.List;
 import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Coordinacion;
 import com.luciagf.modelo.Especialidad;
+import com.luciagf.modelo.Perfil;
 import com.luciagf.modelo.Persona;
 
 /**
@@ -156,6 +157,32 @@ public class PersonaDAO {
         return null;
     }
 
+    //BUSCAR POR USUARIO
+    public Persona buscarPorUsuario(String usuario, String password) throws SQLException {
+        String sql = "SELECT p.id, p.nombre, p.email, p.nacionalidad, c.usuario, c.password, p.perfil " +
+                     "FROM persona p JOIN credencial c ON p.idCredenciales = c.id " +
+                     "WHERE c.usuario = ? AND c.password = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, usuario);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Persona persona = new Persona();
+                    persona.setId(rs.getLong("id"));
+                    persona.setNombre(rs.getString("nombre"));
+                    persona.setEmail(rs.getString("email"));
+                    persona.setNacionalidad(rs.getString("nacionalidad"));
+                    persona.setPerfil(Perfil.valueOf(rs.getString("perfil")));                 
+                    
+                    return persona;
+                }
+            }
+        }
+        return null;
+    }
+
+    
+    
     // BUSCAR POR EMAIL
     public Persona buscarPorEmail(String email) throws SQLException {
         String sql = "SELECT * FROM persona p " +
@@ -205,6 +232,33 @@ public class PersonaDAO {
         }
         return null;
     }
+    
+    //LISTAR ARTISTAS
+    public List<Persona> listarArtistas() throws SQLException {
+        List<Persona> artistas = new ArrayList<>();
+
+        String sql = "SELECT id, nombre, email, nacionalidad " +
+                     "FROM persona " +
+                     "WHERE perfil = 'ARTISTA'";
+
+        try (PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Persona artista = new Persona();
+                artista.setId(rs.getLong("id"));
+                artista.setNombre(rs.getString("nombre"));
+                artista.setEmail(rs.getString("email"));
+                artista.setNacionalidad(rs.getString("nacionalidad"));
+                artista.setPerfil(Perfil.ARTISTA);
+
+                artistas.add(artista);
+            }
+        }
+
+        return artistas;
+    }
+    
 
     // LISTAR TODAS LAS PERSONAS
     public List<Persona> listarTodas() throws SQLException {

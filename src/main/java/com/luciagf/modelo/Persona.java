@@ -12,6 +12,7 @@ public class Persona{
 	protected String email;
 	protected String nacionalidad;
 	private Long idCredenciales;
+	private Perfil perfil;
 
 	public Persona() {
 		super();
@@ -64,6 +65,15 @@ public class Persona{
 
 	public void setIdCredenciales(Long idCredenciales) {
 		this.idCredenciales = idCredenciales;
+	}
+
+	
+	public Perfil getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(Perfil perfil) {
+		this.perfil = perfil;
 	}
 
 	@Override

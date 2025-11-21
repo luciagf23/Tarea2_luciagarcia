@@ -1,5 +1,8 @@
 package com.luciagf.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Lucía García Fernández
  * @version 1.0
@@ -9,7 +12,7 @@ public class Artista extends Persona {
 
 	private Long idArt;
 	private String apodo = null;
-	private Especialidad especialidad;
+	private List<Especialidad> especialidades;
 
 	public Artista() {
 		super();
@@ -21,14 +24,14 @@ public class Artista extends Persona {
 		super(idPersona, nombre, email, nacionalidad);
 		this.idArt = idArt;
 		this.apodo = apodo;
-		this.especialidad = especialidad;
+		this.especialidades = new ArrayList<Especialidad>();
 	}
-	
+
 	public Artista(Long idPersona, String nombre, String email, String nacionalidad, String apodo,
 			Especialidad especialidad) {
 		super(idPersona, nombre, email, nacionalidad);
 		this.apodo = apodo;
-		this.especialidad = especialidad;
+		this.especialidades = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -47,18 +50,17 @@ public class Artista extends Persona {
 		this.apodo = apodo;
 	}
 
-	public Especialidad getEspecialidad() {
-		return especialidad;
+	public List<Especialidad> getEspecialidades() {
+		return especialidades;
 	}
 
-	public void setEspecialidad(Especialidad especialidad) {
-		this.especialidad = especialidad;
+	public void setEspecialidades(List<Especialidad> especialidades) {
+		this.especialidades = especialidades;
 	}
 
 	@Override
 	public String toString() {
-		return "Artista [idArt=" + idArt + ", apodo=" + apodo + ", especialidad=" + especialidad + ", id=" + id
-				+ ", nombre=" + nombre + ", email=" + email + ", nacionalidad=" + nacionalidad + "]";
+		return "Artista [idArt=" + idArt + ", apodo=" + apodo + ", especialidades=" + especialidades + "]";
 	}
 
 }

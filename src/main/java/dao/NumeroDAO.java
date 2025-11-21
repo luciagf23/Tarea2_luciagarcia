@@ -32,10 +32,9 @@ public class NumeroDAO {
 	
 	
 	//INSERTAR numero
-	public void insertar(Numero numero) {
-		String sql = "INSERT INTO numero(id, orden, nombre, duracion, idEspectaculo) VALUES (?, ?, ?, ?, ?, ?)";
-		try(PreparedStatement ps = con.prepareStatement(sql)) {
-				ps.setLong(1, numero.getId());
+	public void insertar(Numero numero) throws SQLException {
+		String sql = "INSERT INTO numero(orden, nombre, duracion, idEspectaculo) VALUES (?, ?, ?, ?, ?, ?)";
+		try(PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				ps.setInt(2, numero.getOrden());
 	            ps.setString(3, numero.getNombre());
 	            ps.setDouble(4, numero.getDuracion());
@@ -44,11 +43,13 @@ public class NumeroDAO {
 	           
 	           System.out.println("Numero insertado correctamente");
 
-	       } catch (SQLException e) {
-	           System.out.println("Error al insertar numero");
-	           e.printStackTrace();
-	       }	
-	}
+	           try (ResultSet rs = ps.getGeneratedKeys()) {
+	                if (rs.next()) {
+	                    numero.setId(rs.getLong(1));
+	                }
+	           } 
+			}    
+		}
 	
 	// BUSCAR POR ID
 	 public Numero buscarPorId(long id) throws SQLException {
@@ -119,6 +120,19 @@ public class NumeroDAO {
 	        }
 	    }
 	
+	 
+	 //CONTAR NUMEROS 
+	 public int contarPorEspectaculo(Long idEspectaculo) throws SQLException {
+	        String sql = "SELECT COUNT(*) FROM numero WHERE idEspectaculo=?";
+	        try (PreparedStatement ps = con.prepareStatement(sql)) {
+	            ps.setLong(1, idEspectaculo);
+	            try (ResultSet rs = ps.executeQuery()) {
+	                if (rs.next()) return rs.getInt(1);
+	            }
+	        }
+	        return 0;
+	 }
+
 	
 	//LISTAR TODOS LOS NUMEROS
 	public List<Numero> listarTodos() throws SQLException {

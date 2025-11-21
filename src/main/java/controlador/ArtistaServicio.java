@@ -90,6 +90,40 @@ public class ArtistaServicio {
 		return artistaDAO.listarTodos();
 	}
 	
+	//VER FICHA
+	public void verFicha(Long idArtista) {
+        try {
+            Artista artista = artistaDAO.obtenerArtistaPorId(idArtista);
+            if (artista == null) {
+                System.out.println("No se encontró el artista");
+                return;
+            }
+
+            System.out.println("===== FICHA DEL ARTISTA =====");
+            System.out.println("Nombre: " + artista.getNombre());
+            System.out.println("Email: " + artista.getEmail());
+            System.out.println("Nacionalidad: " + artista.getNacionalidad());
+            if (artista.getApodo() != null) {
+                System.out.println("Apodo: " + artista.getApodo());
+            }
+            System.out.println("Especialidades: " + artista.getEspecialidades());
+
+            System.out.println("\nTrayectoria en el circo:");
+            List<String> trayectoria = artistaDAO.obtenerTrayectoria(idArtista);
+            if (trayectoria.isEmpty()) {
+                System.out.println("Este artista aún no ha participado en ningún número");
+            } else {
+                for (String t : trayectoria) {
+                    System.out.println("- " + t);
+                }
+            }
+            System.out.println("=============================");
+
+        } catch (SQLException e) {
+            System.out.println("Error al mostrar ficha: " + e.getMessage());
+        }
+    }
+	
 	
 	}
 	
