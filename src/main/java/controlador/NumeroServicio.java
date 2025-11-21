@@ -2,8 +2,10 @@ package controlador;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.luciagf.modelo.Numero;
+import com.luciagf.modelo.Sesion;
 
 import dao.NumeroDAO;
 
@@ -50,6 +52,34 @@ public class NumeroServicio {
 	    if (!duracionStr.matches("\\d+,[05]")) return false;
 	    return true;
 	}
+	
+	
+	
+	public void listarNumeros() throws SQLException {
+	    List<Numero> numeros = numeroDAO.listarTodos();
+
+	    if (numeros.isEmpty()) {
+	        System.out.println("No hay números registrados.");
+	    } else {
+	        System.out.println("== Lista de números ==");
+	        for (Numero n : numeros) {
+	            System.out.println("ID: " + n.getId() +
+	                               " | Nombre: " + n.getNombre() +
+	                               " | Duración: " + n.getDuracion() + " min");
+	        }
+	    }
+	}
+
+	
+	public void eliminarNumero(Long idNumero, Sesion sesion) throws SQLException {
+        numeroDAO.eliminar(idNumero);
+    }
+	
+	public void asignarArtistaANumero(Long idNumero, Long idArtista, Sesion sesion) {
+       
+        numeroDAO.asignarArtista(idNumero, idArtista);
+    }
+	
 	
 	
 }

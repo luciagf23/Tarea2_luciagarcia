@@ -1,6 +1,5 @@
 package com.luciagf.modelo;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
  * @version 1.0
  * @since 2025
  */
-public class Espectaculo implements Serializable {
+public class Espectaculo {
 
 	private Long id;
 	private String nombre;

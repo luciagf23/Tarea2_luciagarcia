@@ -133,6 +133,29 @@ public class NumeroDAO {
 	        return 0;
 	 }
 
+	 //ASIGNAR ARTISTA
+	 public void asignarArtista(Long idNumero, Long idArtista) {
+		    String sql = "INSERT INTO numero_artista (id_numero, id_artista) VALUES (?, ?)";
+
+		    try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+		        ps.setLong(1, idNumero);
+		        ps.setLong(2, idArtista);
+
+		        int filas = ps.executeUpdate();
+
+		        if (filas > 0) {
+		            System.out.println("Artista asignado correctamente al número");
+		        } else {
+		            System.out.println("No se pudo asignar el artista al número");
+		        }
+
+		    } catch (SQLException e) {
+		        System.out.println("Error al asignar artista a número: " + e.getMessage());
+		    }
+		}
+	 
+	 
 	
 	//LISTAR TODOS LOS NUMEROS
 	public List<Numero> listarTodos() throws SQLException {

@@ -81,6 +81,7 @@ public class Sesion {
         this.nombreUsuario = null;
         this.password = null;
         this.perfilActual = Perfil.INVITADO;
+        this.personaActual=null;
     }
     
     // Saber si hay sesión activa

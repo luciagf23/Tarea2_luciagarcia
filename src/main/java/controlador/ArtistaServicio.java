@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Especialidad;
+import com.luciagf.modelo.Espectaculo;
+import com.luciagf.modelo.Numero;
 import com.luciagf.modelo.Persona;
 
 import dao.ArtistaDAO;
@@ -124,6 +126,29 @@ public class ArtistaServicio {
         }
     }
 	
+	// Ver espectáculos y números asignados
+    public void verEspectaculosYNumeros(Long idArtista) {
+        List<Espectaculo> espectaculos = artistaDAO.obtenerEspectaculosDeArtista(idArtista);
+        List<Numero> numeros = artistaDAO.obtenerNumerosDeArtista(idArtista);
+
+        System.out.println("== Espectáculos del artista ==");
+        if (espectaculos.isEmpty()) {
+            System.out.println("No tiene espectáculos asignados.");
+        } else {
+            for (Espectaculo e : espectaculos) {
+                System.out.println("ID: " + e.getId() + " | Nombre: " + e.getNombre());
+            }
+        }
+
+        System.out.println("== Números del artista ==");
+        if (numeros.isEmpty()) {
+            System.out.println("No tiene números asignados.");
+        } else {
+            for (Numero n : numeros) {
+                System.out.println("ID: " + n.getId() + " | Nombre: " + n.getNombre());
+            }
+        }
+    }
 	
 	}
 	

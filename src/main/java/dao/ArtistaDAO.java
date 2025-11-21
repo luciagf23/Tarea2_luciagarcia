@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.luciagf.modelo.Artista;
 import com.luciagf.modelo.Especialidad;
+import com.luciagf.modelo.Espectaculo;
+import com.luciagf.modelo.Numero;
 import com.luciagf.modelo.Persona;
 
 /**
@@ -253,5 +255,61 @@ public class ArtistaDAO {
 
             ps.executeUpdate();
         }
+    }
+    
+    public List<Espectaculo> obtenerEspectaculosDeArtista(Long idArtista) {
+        List<Espectaculo> lista = new ArrayList<>();
+        String sql = "SELECT DISTINCT e.id, e.titulo, e.descripcion, e.fecha_inicio, e.fecha_fin, e.duracion " +
+                     "FROM espectaculo e " +
+                     "JOIN numero n ON e.id = n.id_espectaculo " +
+                     "JOIN numero_artista na ON n.id = na.id_numero " +
+                     "WHERE na.id_artista = ?";
+
+        try (
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setLong(1, idArtista);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Espectaculo e = new Espectaculo();
+                e.setId(rs.getLong("id"));
+                e.setNombre(rs.getString("titulo"));
+                e.setFechaini(rs.getDate("fecha_inicio").toLocalDate());
+                e.setFechafin(rs.getDate("fecha_fin").toLocalDate());
+                lista.add(e);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error al obtener espectáculos del artista: " + ex.getMessage());
+        }
+        return lista;
+    }
+    
+    public List<Numero> obtenerNumerosDeArtista(Long idArtista) {
+        List<Numero> lista = new ArrayList<>();
+        String sql = "SELECT n.id, n.nombre, n.duracion " +
+                     "FROM numero n " +
+                     "JOIN numero_artista na ON n.id = na.id_numero " +
+                     "WHERE na.id_artista = ?";
+
+        try (
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setLong(1, idArtista);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Numero n = new Numero();
+                n.setId(rs.getLong("id"));
+                n.setNombre(rs.getString("nombre"));
+                n.setDuracion(rs.getInt("duracion"));
+                lista.add(n);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Error al obtener números del artista: " + ex.getMessage());
+        }
+        return lista;
     }
 }

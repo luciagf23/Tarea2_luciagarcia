@@ -29,6 +29,10 @@ public class Credencial {
 
 	}
 
+	public Credencial(String usuario, String password2) {
+		
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
