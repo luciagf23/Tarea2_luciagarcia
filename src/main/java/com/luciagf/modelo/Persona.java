@@ -25,6 +25,17 @@ public class Persona {
 		this.nacionalidad = nacionalidad;
 
 	}
+	
+
+	public Persona(Long id, String nombre, String email, String nacionalidad,Perfil perfil) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.email = email;
+		this.nacionalidad = nacionalidad;
+		this.idCredenciales = idCredenciales;
+		this.perfil = perfil;
+	}
 
 	public Long getId() {
 		return id;

@@ -47,43 +47,49 @@ public class PersonaDAO {
 	}
 
 	public Persona buscarPorCredenciales(String username, String password) throws SQLException {
-		String sql = "SELECT p.id, p.nombre, p.email, p.nacionalidad, c.senior, c.fechasenior, "
-				+ "a.apodo, a.especialidad, u.rol " + "FROM persona p " + "JOIN credencial u ON p.id = u.idPersona "
-				+ "LEFT JOIN coordinacion c ON p.id = c.idPersona " + "LEFT JOIN artista a ON p.id = a.idPersona "
-				+ "WHERE u.username = ? AND u.password = ?";
+	    String sql = "SELECT p.id, p.nombre, p.email, p.nacionalidad, c.senior, c.fechasenior, "
+	               + "a.apodo, a.especialidad, a.idPersona AS idArt, p.perfil "
+	               + "FROM persona p "
+	               + "JOIN credencial u ON p.id = u.idPersona "
+	               + "LEFT JOIN coordinacion c ON p.id = c.idPersona "
+	               + "LEFT JOIN artista a ON p.id = a.idPersona "
+	               + "WHERE u.username = ? AND u.password = ?";
 
-		try (PreparedStatement ps = con.prepareStatement(sql)) {
-			ps.setString(1, username.toLowerCase());
-			ps.setString(2, password);
-			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					Long id = rs.getLong("id");
-					String nombre = rs.getString("nombre");
-					String email = rs.getString("email");
-					String nacionalidad = rs.getString("nacionalidad");
-					String rol = rs.getString("rol");
+	    try (PreparedStatement ps = con.prepareStatement(sql)) {
+	        ps.setString(1, username.toLowerCase());
+	        ps.setString(2, password);
 
-					if ("Coordinacion".equalsIgnoreCase(rol)) {
-						boolean senior = rs.getBoolean("senior");
-						LocalDate fechaSenior = rs.getDate("fechasenior") != null
-								? rs.getDate("fechasenior").toLocalDate()
-								: null;
-						return new Coordinacion(id, nombre, email, nacionalidad, senior, fechaSenior);
-					} else if ("Artista".equalsIgnoreCase(rol)) {
-						String apodo = rs.getString("apodo");
-						String especialidadStr = rs.getString("especialidad");
-						Long idArt = rs.getLong("idArt");
-						Especialidad especialidad = Especialidad.valueOf(especialidadStr);
-						return new Artista(id, nombre, email, nacionalidad, idArt, apodo, especialidad);
-					} else {
-						// Invitado o rol genérico
-						return new Persona(id, nombre, email, nacionalidad);
-					}
-				}
-			}
-		}
-		return null;
+	        try (ResultSet rs = ps.executeQuery()) {
+	            if (rs.next()) {
+	                Long id = rs.getLong("id");
+	                String nombre = rs.getString("nombre");
+	                String email = rs.getString("email");
+	                String nacionalidad = rs.getString("nacionalidad");
+	                String perfilStr = rs.getString("perfil");
+	                Perfil perfil = Perfil.valueOf(perfilStr.toUpperCase()); 
+
+	                if (perfil == Perfil.COORDINACION) {
+	                    boolean senior = rs.getBoolean("senior");
+	                    LocalDate fechaSenior = rs.getDate("fechasenior") != null
+	                            ? rs.getDate("fechasenior").toLocalDate(): null;
+	                            
+	                    return new Coordinacion(id, nombre, email, nacionalidad, senior, fechaSenior);
+	                } else if (perfil == Perfil.ARTISTA) {
+	                    String apodo = rs.getString("apodo");
+	                    String especialidadStr = rs.getString("especialidad");
+	                    Long idArt = rs.getLong("idArt");
+	                    Especialidad especialidad = Especialidad.valueOf(especialidadStr.toUpperCase());
+	                    return new Artista(id, nombre, email, nacionalidad, idArt, apodo, especialidad);
+	                } else {
+	                    return new Persona(id, nombre, email, nacionalidad, perfil);
+	                }
+	            }
+	        }
+	    }
+	    return null;
 	}
+
+	
 
 	public Coordinacion seleccionarCoordinador() throws SQLException {
 		// consulta que devuelve solo personas con perfil COORDINACION
